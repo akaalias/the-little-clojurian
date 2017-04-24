@@ -1,6 +1,8 @@
 (ns the-little-clojurian.chapter1
   (:require [clojure.test :refer :all]))
 
+(declare listp? atom? s-expression? car cdr conss null? eq?)
+
 (with-test 
   (def atom? (fn [a] (not (listp? a))))
   (testing "returns true"
