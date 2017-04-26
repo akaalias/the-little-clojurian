@@ -111,3 +111,27 @@
          '()))
   (is (= (multirember 'cup '(coffee cup tea cup and hick cup))
          '(coffee tea and hick))))
+
+(with-test
+  (def multiinsertR
+    (fn [new old lat]
+      (cond (null? lat) '()
+            (eq? (car lat) old) (cons old (cons new (multiinsertR new old (cdr lat))))
+            :else (cons (car lat) (multiinsertR new old (cdr lat))))))
+
+  (is (= (multiinsertR 'new 'old '())
+         '()))
+  (is (= (multiinsertR 'new 'old '(old socks old beer))
+         '(old new socks old new beer))))
+
+(with-test
+  (def multiinsertL
+    (fn [new old lat]
+      (cond (null? lat) '()
+            (eq? (car lat) old) (cons new (cons old (multiinsertL new old (cdr lat))))
+            :else (cons (car lat) (multiinsertL new old (cdr lat))))))
+
+  (is (= (multiinsertL 'new 'old '())
+         '()))
+  (is (= (multiinsertL 'new 'old '(old socks old beer))
+         '(new old socks new old beer))))
