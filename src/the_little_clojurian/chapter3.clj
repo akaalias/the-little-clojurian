@@ -67,10 +67,23 @@
   (def insertL
     (fn [new old lat]
       (cond (null? lat) '()
-            (eq? (car lat) old) (conss new (conss old (cdr lat)))
+            (eq? (car lat) old) (conss new lat)
             :else (cons (car lat) (insertL new old (cdr lat))))))
   
   (is (= (insertL 'topping 'fudge '())
          '()))
   (is (= (insertL 'topping 'fudge '(ice cream with fudge for dessert))
          '(ice cream with topping fudge for dessert))))
+
+(with-test
+  (def subst
+    (fn [new old lat]
+      (cond (null? lat) '()
+            (eq? (car lat) old) (cons new (cdr lat))
+            :else (cons (car lat)
+                        (subst new old (cdr lat))))))
+
+  (is (= (subst 'topping 'fudge '())
+         '()))
+  (is (= (subst 'topping 'fudge '(ice cream with fudge for dessert))
+         '(ice cream with topping for dessert))))
