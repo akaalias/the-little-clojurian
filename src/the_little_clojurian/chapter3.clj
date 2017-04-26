@@ -62,3 +62,15 @@
          '(tacos tamales and jalapeno salsa)))
   (is (= (insertR 'e 'd '(a b c d f g d h))
          '(a b c d e f g d h))))
+
+(with-test
+  (def insertL
+    (fn [new old lat]
+      (cond (null? lat) '()
+            (eq? (car lat) old) (conss new (conss old (cdr lat)))
+            :else (cons (car lat) (insertL new old (cdr lat))))))
+  
+  (is (= (insertL 'topping 'fudge '())
+         '()))
+  (is (= (insertL 'topping 'fudge '(ice cream with fudge for dessert))
+         '(ice cream with topping fudge for dessert))))
