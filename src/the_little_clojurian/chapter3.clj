@@ -135,3 +135,18 @@
          '()))
   (is (= (multiinsertL 'new 'old '(old socks old beer))
          '(new old socks new old beer))))
+
+(with-test
+  (def multisubst
+    (fn [new old lat]
+      (cond (null? lat) '()
+            (eq? (car lat) old) (cons new (multisubst new old (cdr lat)))
+            :else (cons (car lat) (multisubst new old (cdr lat))))))
+  (is (= (multisubst 'new 'old '())
+         '()))
+  (is (= (multisubst 'new 'old '(frog))
+         '(frog)))
+  (is (= (multisubst 'new 'old '(old))
+         '(new)))
+  (is (= (multisubst 'new 'old '(old old old))
+         '(new new new))))
