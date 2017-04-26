@@ -8,9 +8,8 @@
     (fn [a lat] 
       (cond (null? lat) '()
             (eq? (car lat) a) (cdr lat)
-            :else (conss (car lat) 
-                        (rember a 
-                                (cdr lat))))))
+            :else (conss (car lat) (rember a 
+                                           (cdr lat))))))
   
   (is (= (rember 'and '(bacon lettuce and tomato)) '(bacon lettuce tomato)))
   (is (= (rember 'mint '(lamb chops and mint jelly)) '(lamb chops and jelly)))
@@ -87,3 +86,16 @@
          '()))
   (is (= (subst 'topping 'fudge '(ice cream with fudge for dessert))
          '(ice cream with topping for dessert))))
+
+(with-test
+  (def subst2 
+    (fn [new o1 o2 lat]
+      (cond (null? lat) '()
+            (or (eq? (car lat) o1)
+                (eq? (car lat) o2)) (cons new (cdr lat))
+            :else (cons (car lat) (subst2 new o1 o2 (cdr lat))))))
+
+  (is (= (subst2 'vanilla 'chocolate 'banana '())
+         '()))
+  (is (= (subst2 'vanilla 'chocolate 'banana '(banana ice cream with chocolate topping))
+         '(vanilla ice cream with chocolate topping))))
