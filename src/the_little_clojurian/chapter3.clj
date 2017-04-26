@@ -99,3 +99,15 @@
          '()))
   (is (= (subst2 'vanilla 'chocolate 'banana '(banana ice cream with chocolate topping))
          '(vanilla ice cream with chocolate topping))))
+
+
+(with-test
+  (def multirember 
+    (fn [a lat]
+      (cond (null? lat) '()
+            (eq? (car lat) a) (multirember a (cdr lat))
+            :else (cons (car lat) (multirember a (cdr lat))))))
+  (is (= (multirember 'cup '())
+         '()))
+  (is (= (multirember 'cup '(coffee cup tea cup and hick cup))
+         '(coffee tea and hick))))
