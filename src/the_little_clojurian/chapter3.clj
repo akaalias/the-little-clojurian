@@ -10,7 +10,9 @@
             (eq? (car lat) a) (cdr lat)
             :else (conss (car lat) (rember a 
                                            (cdr lat))))))
-  
+
+  (is (= (rember 'and '()) '()))
+  (is (= (rember 'and '(and)) '()))
   (is (= (rember 'and '(bacon lettuce and tomato)) '(bacon lettuce tomato)))
   (is (= (rember 'mint '(lamb chops and mint jelly)) '(lamb chops and jelly)))
   (is (= (rember 'mint '(lamb chops and mint flavored mint jelly)) '(lamb chops and flavored mint jelly))))
@@ -23,6 +25,7 @@
             :else (cons (car (car l))
                         (firsts (cdr l))))))
 
+  (is (= (firsts '()) '()))
   (is (= (firsts '((apple peach pumpkin)
                    (plum pear cherry)
                    (grape raisin pea)
@@ -39,9 +42,7 @@
                    ((no) more)))
          '((five plums)
            eleven
-           (no))))
-  (is (= (firsts '())
-         '())))
+           (no)))))
 
 (with-test
   (def insertR 
@@ -78,8 +79,8 @@
   (def subst
     (fn [new old lat]
       (cond (null? lat) '()
-            (eq? (car lat) old) (cons new (cdr lat))
-            :else (cons (car lat)
+            (eq? (car lat) old) (conss new (cdr lat))
+            :else (conss (car lat)
                         (subst new old (cdr lat))))))
 
   (is (= (subst 'topping 'fudge '())
@@ -92,8 +93,8 @@
     (fn [new o1 o2 lat]
       (cond (null? lat) '()
             (or (eq? (car lat) o1)
-                (eq? (car lat) o2)) (cons new (cdr lat))
-            :else (cons (car lat) (subst2 new o1 o2 (cdr lat))))))
+                (eq? (car lat) o2)) (conss new (cdr lat))
+            :else (conss (car lat) (subst2 new o1 o2 (cdr lat))))))
 
   (is (= (subst2 'vanilla 'chocolate 'banana '())
          '()))
@@ -106,7 +107,7 @@
     (fn [a lat]
       (cond (null? lat) '()
             (eq? (car lat) a) (multirember a (cdr lat))
-            :else (cons (car lat) (multirember a (cdr lat))))))
+            :else (conss (car lat) (multirember a (cdr lat))))))
   (is (= (multirember 'cup '())
          '()))
   (is (= (multirember 'cup '(coffee cup tea cup and hick cup))
@@ -116,8 +117,8 @@
   (def multiinsertR
     (fn [new old lat]
       (cond (null? lat) '()
-            (eq? (car lat) old) (cons old (cons new (multiinsertR new old (cdr lat))))
-            :else (cons (car lat) (multiinsertR new old (cdr lat))))))
+            (eq? (car lat) old) (conss old (conss new (multiinsertR new old (cdr lat))))
+            :else (conss (car lat) (multiinsertR new old (cdr lat))))))
 
   (is (= (multiinsertR 'new 'old '())
          '()))
@@ -128,7 +129,7 @@
   (def multiinsertL
     (fn [new old lat]
       (cond (null? lat) '()
-            (eq? (car lat) old) (cons new (cons old (multiinsertL new old (cdr lat))))
+            (eq? (car lat) old) (conss new (conss old (multiinsertL new old (cdr lat))))
             :else (cons (car lat) (multiinsertL new old (cdr lat))))))
 
   (is (= (multiinsertL 'new 'old '())
@@ -140,8 +141,8 @@
   (def multisubst
     (fn [new old lat]
       (cond (null? lat) '()
-            (eq? (car lat) old) (cons new (multisubst new old (cdr lat)))
-            :else (cons (car lat) (multisubst new old (cdr lat))))))
+            (eq? (car lat) old) (conss new (multisubst new old (cdr lat)))
+            :else (conss (car lat) (multisubst new old (cdr lat))))))
   (is (= (multisubst 'new 'old '())
          '()))
   (is (= (multisubst 'new 'old '(frog))
