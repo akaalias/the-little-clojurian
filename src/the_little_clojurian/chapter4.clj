@@ -101,3 +101,15 @@
   (is (= (tup+ '(2 3) '(4 6)) '(6 9)))
   (is (= (tup+ '(3 6 9 11 4) '(8 5 2 0 7)) '(11 11 11 11 11)))
   (is (= (tup+ '(3 7) '(4 6 8 1)) '(7 13 8 1))))
+
+(with-test
+  (def greater-than
+    (fn [n m] false
+      (cond (zero? n) false
+            (zero? m) true
+            :else (greater-than (sub1 n) (sub1 m)))))
+
+  (is (= (greater-than 0 0) false))
+  (is (= (greater-than 12 133) false))
+  (is (= (greater-than 120 11) true))
+  (is (= (greater-than 4 6) false)))
