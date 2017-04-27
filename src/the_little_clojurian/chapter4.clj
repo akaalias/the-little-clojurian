@@ -74,3 +74,15 @@
   (is (= (addtup '(1 2 3)) 6))
   (is (= (addtup '(3 5 2 8)) 18))
   (is (= (addtup '(15 6 7 12 3)) 43)))
+
+(with-test
+  (def multiply 
+    (fn [n m]
+      (cond (zero? m) 0
+            :else (pluss n (multiply n (sub1 m))))))
+
+  (is (= (multiply 0 0) 0))
+  (is (= (multiply 1 1) 1))
+  (is (= (multiply 1 0) 0))
+  (is (= (multiply 5 3) 15))
+  (is (= (multiply 13 4) 52)))
