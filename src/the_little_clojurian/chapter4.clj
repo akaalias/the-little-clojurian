@@ -123,4 +123,17 @@
             :else (smaller-than (sub1 n) (sub1 m)))))
   
   (is (= (smaller-than 0 0) false))
-  (is (= (smaller-than 0 1) true)))
+  (is (= (smaller-than 0 1) true))
+  (is (= (smaller-than 4 6))))
+
+(with-test
+  (def equal 
+    (fn [n m] 
+      (cond (smaller-than n m) false
+            (greater-than n m) false
+            :else true)))
+
+  (is (= (equal 0 0) true))
+  (is (= (equal 0 1) false))
+  (is (= (equal 1 1) true))
+  (is (= (equal 44 44) true)))
