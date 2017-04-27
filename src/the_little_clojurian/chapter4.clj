@@ -160,3 +160,14 @@
   (is (= (divide 15 4) 3))
   (is (= (divide 15 3) 5))
   (is (= (divide 100 10) 10)))
+
+(with-test
+  (def length 
+    (fn [lat] 
+      (cond (null? lat) 0
+            :else (add1 (length (cdr lat))))))
+
+  (is (= (length '()) 0))
+  (is (= (length '(hotdogs)) 1))
+  (is (= (length '(hotdogs with mustard sauerkraut and pickles)) 6))
+  (is (= (length '(ham and cheese on rye)) 5)))
