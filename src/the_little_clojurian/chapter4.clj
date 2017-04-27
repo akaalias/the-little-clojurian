@@ -44,3 +44,19 @@
   (is (= (minuss 2 1) 1))
   (is (= (minuss 3 2) 1))
   (is (= (minuss 100 1) 99)))
+
+(with-test
+  (def tup?
+    (fn [l] 
+      (cond (null? l) true
+            (not (number? (car l))) false
+            :else (tup? (cdr l)))))
+  (is (= (tup? '()) true))
+  (is (= (tup? '(a)) false))
+  (is (= (tup? '(1)) true))
+  (is (= (tup? '(1 a)) false))
+  (is (= (tup? '(1 2)) true))
+  (is (= (tup? '(2 11 3 79 47 6))))
+  (is (= (tup? '(8 55 5 555))))
+  (is (= (tup? '(1 2 8 apple 4 3)) false))
+  (is (= (tup? '(3 (7 4) 13 9)) false)))
