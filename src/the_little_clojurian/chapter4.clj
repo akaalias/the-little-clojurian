@@ -184,3 +184,16 @@
   (is (= (pick 1 '(apple)) 'apple))
   (is (= (pick 2 '(apple bananas)) 'bananas))
   (is (= (pick 4 '(apple)) nil)))
+
+(with-test
+  (def rempick 
+    (fn [n lat]
+      (cond (zero? n) nil
+            (zero? (sub1 n)) (cdr lat)
+            :else (cons (car lat) 
+                        (rempick (sub1 n) 
+                                 (cdr lat))))))
+
+  (is (= (rempick 0 '()) nil))
+  (is (= (rempick 1 '(apple)) '()))
+  (is (= (rempick 2 '(apple bananas gin)) '(apple gin))))
