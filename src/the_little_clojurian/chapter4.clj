@@ -171,3 +171,16 @@
   (is (= (length '(hotdogs)) 1))
   (is (= (length '(hotdogs with mustard sauerkraut and pickles)) 6))
   (is (= (length '(ham and cheese on rye)) 5)))
+
+(with-test 
+  (def pick 
+    (fn [n lat] 
+      (cond (zero? n) nil
+            (zero? (sub1 n)) (car lat)
+            :else (pick (sub1 n) (cdr lat)))))
+
+  (is (= (pick 0 '(apple)) nil))
+  (is (= (pick 1 '()) nil))
+  (is (= (pick 1 '(apple)) 'apple))
+  (is (= (pick 2 '(apple bananas)) 'bananas))
+  (is (= (pick 4 '(apple)) nil)))
