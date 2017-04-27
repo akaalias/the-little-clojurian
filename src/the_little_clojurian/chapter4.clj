@@ -51,6 +51,7 @@
       (cond (null? l) true
             (not (number? (car l))) false
             :else (tup? (cdr l)))))
+
   (is (= (tup? '()) true))
   (is (= (tup? '(a)) false))
   (is (= (tup? '(1)) true))
@@ -60,3 +61,16 @@
   (is (= (tup? '(8 55 5 555))))
   (is (= (tup? '(1 2 8 apple 4 3)) false))
   (is (= (tup? '(3 (7 4) 13 9)) false)))
+
+(with-test
+  (def addtup 
+    (fn [tup] 
+      (cond (null? tup) 0
+            :else (pluss (car tup) (addtup (cdr tup))))))
+
+  (is (= (addtup '()) 0))
+  (is (= (addtup '(1)) 1))
+  (is (= (addtup '(1 2)) 3))
+  (is (= (addtup '(1 2 3)) 6))
+  (is (= (addtup '(3 5 2 8)) 18))
+  (is (= (addtup '(15 6 7 12 3)) 43)))
