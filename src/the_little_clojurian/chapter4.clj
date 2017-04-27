@@ -137,3 +137,14 @@
   (is (= (equal 0 1) false))
   (is (= (equal 1 1) true))
   (is (= (equal 44 44) true)))
+
+(with-test
+  (def expt 
+    (fn [n m]
+      (cond (zero? m) 1
+            :else (multiply n (expt n (sub1 m))))))
+
+  (is (= (expt 1 1) 1))
+  (is (= (expt 2 2) 4))
+  (is (= (expt 2 3) 8))
+  (is (= (expt 5 3) 125)))
