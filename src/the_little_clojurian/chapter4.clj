@@ -110,6 +110,17 @@
             :else (greater-than (sub1 n) (sub1 m)))))
 
   (is (= (greater-than 0 0) false))
+  (is (= (greater-than 1 0) true))
   (is (= (greater-than 12 133) false))
   (is (= (greater-than 120 11) true))
   (is (= (greater-than 4 6) false)))
+
+(with-test
+  (def smaller-than
+    (fn [n m] 
+      (cond (zero? m) false
+            (zero? n) true
+            :else (smaller-than (sub1 n) (sub1 m)))))
+  
+  (is (= (smaller-than 0 0) false))
+  (is (= (smaller-than 0 1) true)))
