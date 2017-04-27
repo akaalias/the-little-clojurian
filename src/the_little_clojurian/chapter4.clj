@@ -148,3 +148,15 @@
   (is (= (expt 2 2) 4))
   (is (= (expt 2 3) 8))
   (is (= (expt 5 3) 125)))
+
+(with-test
+  (def divide
+    (fn [n m]
+      (cond (zero? m) (throw (IllegalArgumentException.))
+            (smaller-than n m) 0
+            :else (add1 (divide (minuss n m) m)))))
+  (is (= (divide 0 1) 0))
+  (is (thrown? IllegalArgumentException (divide 1 0)))
+  (is (= (divide 15 4) 3))
+  (is (= (divide 15 3) 5))
+  (is (= (divide 100 10) 10)))
