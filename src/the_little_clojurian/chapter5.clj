@@ -91,8 +91,8 @@
   (def member* 
     (fn [a l] 
       (cond (null? l) false
-            (atom? (car l)) (cond (eq? (car l) a) true
-                                  :else (member* a (cdr l)))
+            (atom? (car l)) (or (eq? (car l) a)
+                                (member* a (cdr l)))
             :else (or (member* a (car l))
                       (member* a (cdr l))))))
 
