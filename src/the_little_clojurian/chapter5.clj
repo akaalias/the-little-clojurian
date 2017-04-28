@@ -72,3 +72,17 @@
   (is (= (subst* 'orange 'banana '(banana)) '(orange)))
   (is (= (subst* 'orange 'banana '((banana))) '((orange))))
   (is (= (subst* 'cup 'mug '((a mug) in the (((kitchen (mug)))))) '((a cup) in the (((kitchen (cup))))))))
+
+(with-test
+  (def insertL*
+    (fn [new old l] 
+      (cond (null? l) '()
+            (atom? (car l)) (cond (eq? (car l) old) (cons new (cons old (insertL* new old (cdr l))))
+                                  :else (cons (car l) (insertL* new old (cdr l))))
+            :else (cons (insertL* new old (car l))
+                        (insertL* new old (cdr l))))))
+
+  (is (= (insertL* 'new 'old '()) '()))
+  (is (= (insertL* 'new 'old '(old)) '(new old)))
+  (is (= (insertL* 'new 'old '((old))) '((new old))))
+  (is (= (insertL* 'new 'old '((these) old ((shoes old) perfume))) '((these) new old ((shoes new old) perfume)))))
