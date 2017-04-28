@@ -197,3 +197,18 @@
   (is (= (rempick 0 '()) nil))
   (is (= (rempick 1 '(apple)) '()))
   (is (= (rempick 2 '(apple bananas gin)) '(apple gin))))
+
+
+(with-test 
+  (def no-nums 
+    (fn [lat]
+      (cond (null? lat) '()
+            (number? (car lat)) (no-nums (cdr lat))
+            :else (cons (car lat) 
+                        (no-nums 
+                         (cdr lat))))))
+
+  (is (= (no-nums '()) '()))
+  (is (= (no-nums '(1)) '()))
+  (is (= (no-nums '(apple)) '(apple)))
+  (is (= (no-nums '(5 pears 6 prunes 9 dates)) '(pears prunes dates))))
