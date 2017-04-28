@@ -252,3 +252,11 @@
   (is (= (occur 'a '(a a)) 2))
   (is (= (occur 'a '(a b c a)) 2))
   (is (= (occur 'a '(b c d e)) 0)))
+
+(with-test
+  (def one?
+    (fn [x] (equal x 1)))
+
+  (is (= (one? 0) false))
+  (is (= (one? 1) true))
+  (is (= (one? 2) false)))
