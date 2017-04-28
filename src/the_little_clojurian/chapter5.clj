@@ -133,3 +133,20 @@
   (is (= (eqlist? '(strawberry ice cream) '(strawberry ice cream)) true))
   (is (= (eqlist? '(strawberry ice cream) '(strawberry cream ice)) false))
   (is (= (eqlist? '((coffee) (cup)) '((coffee) (cup))) true)))
+
+
+(with-test 
+  (def replace* 
+    (fn [new old l] 
+      (cond (null? l) '()
+            (atom? (car l)) (cond (eq? (car l) old) (cons new (replace* new old (cdr l)))
+                                  :else (cons (car l) (replace* new old (cdr l))))
+            :else (cons (replace* new old (car l))
+                        (replace* new old (cdr l))))))
+
+  (is (= (replace* 'foo 'bar '()) '()))
+  (is (= (replace* 'foo 'bar '(bar)) '(foo)))
+  (is (= (replace* 'foo 'bar '((bar))) '((foo))))
+  (is (= (replace* 'foo 'bar '((quux bar))) '((quux foo))))
+  (is (= (replace* 'apple 'orange '(a (deeply (nested (juice of orange) and orange boxes)))) 
+         '(a (deeply (nested (juice of apple) and apple boxes))))))
