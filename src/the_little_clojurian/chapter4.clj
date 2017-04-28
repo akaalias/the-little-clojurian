@@ -238,3 +238,17 @@
   (is (= (equan? 0 'a) false))
   (is (= (equan? 'a 'a) true))
   (is (= (equan? 'a 'b) false)))
+
+(with-test
+  (def occur
+    (fn [a lat] 
+      (cond (null? lat) 0
+            (equan? (car lat) a) (add1 (occur a (cdr lat)))
+            :else (occur a (cdr lat)))))
+
+  (is (= (occur 'a '()) 0))
+  (is (= (occur 'a '(a)) 1))
+  (is (= (occur 'a '(b)) 0))
+  (is (= (occur 'a '(a a)) 2))
+  (is (= (occur 'a '(a b c a)) 2))
+  (is (= (occur 'a '(b c d e)) 0)))
