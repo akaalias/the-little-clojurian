@@ -30,6 +30,7 @@
             (atom? (car l)) (cond (eq? (car l) old) (cons old 
                                                           (cons new (insertR* new old 
                                                                               (cdr l))))
+
                                   :else (cons (car l) 
                                               (insertR* new old 
                                                         (cdr l))))
@@ -40,3 +41,19 @@
   (is (= (insertR* 'new 'old '(old)) '(old new)))
   (is (= (insertR* 'new 'old '((old))) '((old new))))
   (is (= (insertR* 'new 'old '((these) old ((shoes old) perfume))) '((these) old new ((shoes old new) perfume)))))
+
+(with-test
+  (def occur*
+    (fn [a l] 
+      (cond (null? l) 0
+            (atom? (car l)) (cond (eq? (car l) a) (add1 (occur* a (cdr l)))
+                                  :else (occur* a (cdr l)))
+            :else (pluss (occur* a (car l))
+                         (occur* a (cdr l))))))
+
+  (is (= (occur* 'beer '()) 0))
+  (is (= (occur* 'beer '(beer)) 1))
+  (is (= (occur* 'beer '(coffee)) 0))
+  (is (= (occur* 'beer '((beer))) 1))
+  (is (= (occur* 'orange '((orange (beer)))) 1))
+  (is (= (occur* 'orange '((banana split) and (orange) with sherbet (((and orange peanut) butter)))) 2)))
