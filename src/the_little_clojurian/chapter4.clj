@@ -212,3 +212,16 @@
   (is (= (no-nums '(1)) '()))
   (is (= (no-nums '(apple)) '(apple)))
   (is (= (no-nums '(5 pears 6 prunes 9 dates)) '(pears prunes dates))))
+
+(with-test
+  (def all-nums
+    (fn [lat]
+      (cond (null? lat) '()
+            (number? (car lat)) (cons (car lat)
+                                      (all-nums (cdr lat)))
+            :else (all-nums (cdr lat)))))
+
+  (is (= (all-nums '()) '()))
+  (is (= (all-nums '(1)) '(1)))
+  (is (= (all-nums '(apple)) '()))
+  (is (= (all-nums '(1 apple 2 pears 3 bananas)) '(1 2 3))))
