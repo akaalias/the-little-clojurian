@@ -22,3 +22,21 @@
   (is (= (rember* 'cup '((cup))) '(())))
   (is (= (rember* 'cup '(coffee (cup) and (another) cup)) '(coffee () and (another))))
   (is (= (rember* 'sauce '(((tomato sauce)) ((bean) sauce) (and ((flying)) sauce))) '(((tomato)) ((bean)) (and ((flying)))))))
+
+(with-test
+  (def insertR*
+    (fn [new old l]
+      (cond (null? l) '()
+            (atom? (car l)) (cond (eq? (car l) old) (cons old 
+                                                          (cons new (insertR* new old 
+                                                                              (cdr l))))
+                                  :else (cons (car l) 
+                                              (insertR* new old 
+                                                        (cdr l))))
+            :else (cons (insertR* new old (car l))
+                        (insertR* new old (cdr l))))))
+  
+  (is (= (insertR* 'new 'old '()) '()))
+  (is (= (insertR* 'new 'old '(old)) '(old new)))
+  (is (= (insertR* 'new 'old '((old))) '((old new))))
+  (is (= (insertR* 'new 'old '((these) old ((shoes old) perfume))) '((these) old new ((shoes old new) perfume)))))
