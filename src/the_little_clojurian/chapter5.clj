@@ -57,3 +57,18 @@
   (is (= (occur* 'beer '((beer))) 1))
   (is (= (occur* 'orange '((orange (beer)))) 1))
   (is (= (occur* 'orange '((banana split) and (orange) with sherbet (((and orange peanut) butter)))) 2)))
+
+
+(with-test 
+  (def subst*
+    (fn [new old l] 
+      (cond (null? l) '()
+            (atom? (car l)) (cond (eq? (car l) old) (cons new (subst* new old (cdr l)))
+                                  :else (cons (car l) (subst* new old (cdr l))))
+            :else (cons (subst* new old (car l))
+                        (subst* new old (cdr l))))))
+
+  (is (= (subst* 'orange 'banana '()) '()))
+  (is (= (subst* 'orange 'banana '(banana)) '(orange)))
+  (is (= (subst* 'orange 'banana '((banana))) '((orange))))
+  (is (= (subst* 'cup 'mug '((a mug) in the (((kitchen (mug)))))) '((a cup) in the (((kitchen (cup))))))))
