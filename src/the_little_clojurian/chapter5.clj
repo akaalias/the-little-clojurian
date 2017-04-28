@@ -58,7 +58,6 @@
   (is (= (occur* 'orange '((orange (beer)))) 1))
   (is (= (occur* 'orange '((banana split) and (orange) with sherbet (((and orange peanut) butter)))) 2)))
 
-
 (with-test 
   (def subst*
     (fn [new old l] 
@@ -113,3 +112,24 @@
   (is (= (leftmost '(apple)) 'apple))
   (is (= (leftmost '((apple))) 'apple))
   (is (= (leftmost '(((hot cider) with (green) tea))) 'hot)))
+
+(with-test
+  (def eqlist?
+    (fn [l1 l2] 
+      (cond (and (null? l1) (null? l2)) true
+            (or (null? l1) (null? l2)) false
+            (and (atom? (car l1)) (atom? (car l2))) (and (equan? (car l1) (car l2))
+                                                         (eqlist? (cdr l1) (cdr l2)))
+            (or (atom? (car l1)) 
+                (atom? (car l2))) false
+            :else (and (eqlist? (car l1) (car l2))
+                       (eqlist? (cdr l1) (cdr l2))))))
+  
+  (is (= (eqlist? '() '()) true))
+  (is (= (eqlist? '() '(foot)) false))
+  (is (= (eqlist? '(foot) '()) false))
+  (is (= (eqlist? '(foot) '(foot)) true))
+  (is (= (eqlist? '(foot rub) '(foot sub)) false))
+  (is (= (eqlist? '(strawberry ice cream) '(strawberry ice cream)) true))
+  (is (= (eqlist? '(strawberry ice cream) '(strawberry cream ice)) false))
+  (is (= (eqlist? '((coffee) (cup)) '((coffee) (cup))) true)))
