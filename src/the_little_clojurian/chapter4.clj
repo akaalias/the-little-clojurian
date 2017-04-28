@@ -225,3 +225,16 @@
   (is (= (all-nums '(1)) '(1)))
   (is (= (all-nums '(apple)) '()))
   (is (= (all-nums '(1 apple 2 pears 3 bananas)) '(1 2 3))))
+
+(with-test
+  (def equan?
+    (fn [a1 a2]
+      (cond (and (number? a1) (number? a2)) (equal a1 a2)
+            (or (number? a1) (number? a2)) false
+            :else (eq? a1 a2))))
+  
+  (is (= (equan? 0 0) true))
+  (is (= (equan? 0 1) false))
+  (is (= (equan? 0 'a) false))
+  (is (= (equan? 'a 'a) true))
+  (is (= (equan? 'a 'b) false)))
