@@ -86,3 +86,18 @@
   (is (= (insertL* 'new 'old '(old)) '(new old)))
   (is (= (insertL* 'new 'old '((old))) '((new old))))
   (is (= (insertL* 'new 'old '((these) old ((shoes old) perfume))) '((these) new old ((shoes new old) perfume)))))
+
+(with-test
+  (def member* 
+    (fn [a l] 
+      (cond (null? l) false
+            (atom? (car l)) (cond (eq? (car l) a) true
+                                  :else (member* a (cdr l)))
+            :else (or (member* a (car l))
+                      (member* a (cdr l))))))
+
+  (is (= (member* 'foo '()) false))
+  (is (= (member* 'foo '(foo)) true))
+  (is (= (member* 'foo '(bar)) false))
+  (is (= (member* 'foo '((foo))) true))
+  (is (= (member* 'foo '((the quick) ((((brown (springy foo)) jumps over)) the dog))))))
