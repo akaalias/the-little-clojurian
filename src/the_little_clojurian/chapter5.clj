@@ -101,3 +101,15 @@
   (is (= (member* 'foo '(bar)) false))
   (is (= (member* 'foo '((foo))) true))
   (is (= (member* 'foo '((the quick) ((((brown (springy foo)) jumps over)) the dog))))))
+
+(with-test
+  (def leftmost 
+    (fn [l]
+      (cond (null? l) nil
+            (atom? (car l)) (car l)
+            :else (leftmost (car l)))))
+  
+  (is (= (leftmost '()) nil))
+  (is (= (leftmost '(apple)) 'apple))
+  (is (= (leftmost '((apple))) 'apple))
+  (is (= (leftmost '(((hot cider) with (green) tea))) 'hot)))
