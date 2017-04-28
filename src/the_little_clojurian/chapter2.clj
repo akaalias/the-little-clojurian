@@ -42,3 +42,7 @@
     (is (= (member? 'meat '()) false))
     (is (= (member? 'liver '(bagels and lox)) false))
     (is (= (member? 'poached '(fried eggs and scrambled eggs))))))
+
+(def lat? 
+  (fn [l] 
+    (every? (fn [x] (atom? x)) l)))

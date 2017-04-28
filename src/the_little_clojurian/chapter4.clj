@@ -4,9 +4,12 @@
             [the-little-clojurian.chapter2 :refer :all]
             [the-little-clojurian.chapter3 :refer :all]))
 
+(declare one?)
+
 (with-test 
   (def add1 
     (fn [x] (+ x 1)))
+
   (is (= (add1 0) 1))
   (is (= (add1 67) 68))
   (is (= (add1 68) 69)))
@@ -14,6 +17,7 @@
 (with-test
   (def sub1
     (fn [x] (- x 1)))
+
   (is (= (sub1 0) -1))
   (is (= (sub1 1) 0))
   (is (= (sub1 2) 1))
@@ -176,7 +180,7 @@
   (def pick 
     (fn [n lat] 
       (cond (zero? n) nil
-            (zero? (sub1 n)) (car lat)
+            (one? n) (car lat)
             :else (pick (sub1 n) (cdr lat)))))
 
   (is (= (pick 0 '(apple)) nil))
@@ -189,7 +193,7 @@
   (def rempick 
     (fn [n lat]
       (cond (zero? n) nil
-            (zero? (sub1 n)) (cdr lat)
+            (one? n) (cdr lat)
             :else (cons (car lat) 
                         (rempick (sub1 n) 
                                  (cdr lat))))))
