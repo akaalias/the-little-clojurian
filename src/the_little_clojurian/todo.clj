@@ -1,7 +1,77 @@
 (ns the-little-clojurian.todo
   (:require [clojure.test :refer :all]))
 
-(declare complete-map* complete-list*)
+(declare complete-map* complete-list* complete-node* complete-nodes*)
+
+(with-test 
+  (def complete-nodes* 
+    (fn [id nodes] 
+      (cond (empty? nodes) '()
+            :else (cons (complete-node* id (first nodes)) (complete-nodes* id (rest nodes))))))
+
+  (is (= (complete-nodes* 1 '())
+         '()))
+
+  (is (= (complete-nodes* 1 '({:id 1}))
+         '({:id 1 :complete true})))
+
+  (is (= (complete-nodes* 1 '({:id 1} {:id 1}))
+         '({:id 1 :complete true} {:id 1 :complete true})))
+
+  (is (= (complete-nodes* 1 '({:id 1} {:id 2}))
+         '({:id 1 :complete true} {:id 2})))
+
+  (is (= (complete-nodes* 2 '({:id 1} {:id 2}))
+         '({:id 1} {:id 2 :complete true})))
+  
+  (is (= (complete-nodes* 2 '({:id 1 :nodes ({:id 2})}))
+         '({:id 1 :nodes ({:id 2 :complete true})}))))
+
+(with-test 
+  (def complete-node* 
+    (fn [id m] 
+      (cond (nil? m) {}
+            (empty? m) {}
+            (nil? (:id m)) m
+            (= (:id m) id) (assoc m :complete true)
+            (not (empty? (:nodes m))) {:id (:id m) :nodes (complete-nodes* id (:nodes m))}
+            :else m)))
+
+  (is (= (complete-node* 1 nil) 
+         {}))
+
+  (is (= (complete-node* 1 {})
+         {}))
+
+  (is (= (complete-node* 1 {:foo "bar"})
+         {:foo "bar"}))
+
+  (is (= (complete-node* 1 {:id 1})
+         {:id 1 :complete true}))
+
+  (is (= (complete-node* 2 {:id 1})
+         {:id 1}))
+
+  (is (= (complete-node* 2 {:id 2})
+         {:id 2 :complete true}))
+  
+  (is (= (complete-node* 1 {:id 1 :nodes ()})
+         {:id 1 :complete true :nodes ()}))
+
+  (is (= (complete-node* 1 {:id 1 :nodes '({:id 2})}))
+      {:id 1 :complete true :nodes '({:id 2})})
+
+  (is (= (complete-node* 2 {:id 1 :nodes '({:id 2})})
+         {:id 1 :nodes '({:id 2 :complete true})}))
+
+  (is (= (complete-node* 3 {:id 1 :nodes '({:id 2 :nodes ({:id 3})})})
+         {:id 1 :nodes '({:id 2 :nodes ({:id 3 :complete true})})}))
+
+  (is (= (complete-node* 4 {:id 1 :nodes '({:id 2} {:id 3} {:id 4})})
+         {:id 1 :nodes '({:id 2} {:id 3} {:id 4 :complete true})}))
+  
+  (is (= (complete-node* 2 {:id 1 :nodes '({:id 2 :nodes ({:id 3})})})
+         {:id 1 :nodes '({:id 2 :complete true :nodes ({:id 3})})})))
 
 (with-test
   (def complete-list* 
@@ -89,4 +159,3 @@
 
   (is (= (complete-map* 5 {:id 1 :nodes '({:id 2 :nodes ({:id 3 :nodes ({:id 4 :nodes ({:id 5} {:id 6})})})})}))
        {:id 1 :nodes '({:id 2 :nodes ({:id 3 :nodes ({:id 4 :nodes ({:id 5 :complete true} {:id 6})})})})}))
-
