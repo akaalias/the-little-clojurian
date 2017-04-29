@@ -10,11 +10,20 @@
             (empty? (:nodes root)) root
             :else (leftmost-node (first (:nodes root))))))
   
-  (is (= (leftmost-node nil) nil))
-  (is (= (leftmost-node {:id 1}) {:id 1}))
-  (is (= (leftmost-node {:id 1 :nodes '({:id 2})}) {:id 2}))
-  (is (= (leftmost-node {:id 1 :nodes '({:id 2 :nodes ({:id 3})})}) {:id 3}))
-  (is (= (leftmost-node {:id 1 :nodes '({:id 2} {:id 3})})) {:id 2}))
+  (is (= (leftmost-node nil) 
+         nil))
+
+  (is (= (leftmost-node {:id 1}) 
+         {:id 1}))
+
+  (is (= (leftmost-node {:id 1 :nodes '({:id 2})}) 
+         {:id 2}))
+
+  (is (= (leftmost-node {:id 1 :nodes '({:id 2} {:id 3})}) 
+         {:id 2}))
+
+  (is (= (leftmost-node {:id 1 :nodes '({:id 2 :nodes ({:id 3})})}) 
+         {:id 3})))
 
 (with-test 
   (def complete-nodes* 
