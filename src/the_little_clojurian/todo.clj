@@ -25,7 +25,7 @@
   (is (= (leftmost-node {:id 1 :nodes '({:id 2} {:id 3})}) 
          {:id 2}))
 
-  (is (= (leftmost-node {:id 1 :nodes '({:id 2 :nodes ({:id 3})})}) 
+  (is (= (leftmost-node {:id 1 :nodes '({:id 2 :nodes ({:id 3} {:id 4})})}) 
          {:id 3})))
 
 (with-test
@@ -56,8 +56,13 @@
 (with-test 
   (def complete-nodes* 
     (fn [id nodes] 
-      (cond (empty? nodes) '()
-            :else (cons (complete-node* id (first nodes)) (complete-nodes* id (rest nodes))))))
+      (cond (nil? nodes) nil
+            (empty? nodes) '()
+            :else (cons (complete-node* id (first nodes)) 
+                        (complete-nodes* id (rest nodes))))))
+
+  (is (= (complete-nodes* 1 nil)
+         nil))
 
   (is (= (complete-nodes* 1 '())
          '()))
@@ -121,7 +126,10 @@
          {:id 1 :nodes '({:id 2} {:id 3} {:id 4 :complete true})}))
   
   (is (= (complete-node* 2 {:id 1 :nodes '({:id 2 :nodes ({:id 3})})})
-         {:id 1 :nodes '({:id 2 :complete true :nodes ({:id 3})})})))
+         {:id 1 :nodes '({:id 2 :complete true :nodes ({:id 3})})}))
+
+  (is (= (complete-node* 3 {:id 1 :nodes '({:id 2 :nodes ({:id 3} {:id 4})})})
+         {:id 1 :nodes '({:id 2 :nodes ({:id 3 :complete true} {:id 4})})})))
 
 (with-test
   (def complete-list* 
