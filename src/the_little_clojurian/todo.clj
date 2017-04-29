@@ -13,8 +13,11 @@
   (is (= (leftmost-node nil) 
          nil))
 
-  (is (= (leftmost-node {:id 1}) 
+  (is (= (leftmost-node {:id 1})
          {:id 1}))
+
+  (is (= (leftmost-node {:id 2})
+         {:id 2}))
 
   (is (= (leftmost-node {:id 1 :nodes '({:id 2})}) 
          {:id 2}))
@@ -34,7 +37,7 @@
 
   (is (= (rightmost-node nil) 
          nil))
-  
+
   (is (= (rightmost-node {:id 1})
          {:id 1}))
 
@@ -45,7 +48,10 @@
          {:id 3}))
   
   (is (= (rightmost-node {:id 1 :nodes '({:id 2 :nodes ({:id 3})})})
-         {:id 3})))
+         {:id 3}))
+
+  (is (= (rightmost-node {:id 1 :nodes '({:id 2 :nodes ({:id 3})} {:id 4})})
+         {:id 4})))
 
 (with-test 
   (def complete-nodes* 
