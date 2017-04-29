@@ -1,7 +1,52 @@
 (ns the-little-clojurian.todo
   (:require [clojure.test :refer :all]))
 
-(declare complete-map* complete-list* complete-node* complete-nodes* leftmost-node rightmost-node)
+(declare complete-map* complete-list* complete-node* complete-nodes* leftmost-node rightmost-node remove-nodes remove-node)
+
+(with-test 
+  (def remove-nodes 
+    (fn [id nodes]
+      (cond (nil? nodes) nil
+            (empty? nodes) '()
+            :else (cons (remove-node id (first nodes)) 
+                        (remove-nodes id (rest nodes))))))
+  
+  (is (= (remove-nodes 1 nil) 
+         nil))
+
+  (is (= (remove-nodes 1 '()) 
+         '()))
+
+  (is (= (remove-nodes 1 '({:id 1}))
+         '(nil)))
+
+  (is (= (remove-nodes 1 '({:id 1} {:id 1}))
+         '(nil nil)))
+
+  (is (= (remove-nodes 1 '({:id 1} {:id 2}))
+         '(nil {:id 2 :nodes nil}))))
+
+(with-test 
+  (def remove-node
+    (fn [id root]
+      (cond (nil? root) nil
+            (= (:id root) id) nil
+            :else (assoc root :nodes (remove-nodes id (:nodes root))))))
+
+  (is (= (remove-node 1 nil) 
+         nil))
+
+  (is (= (remove-node 1 {:id 1}) 
+         nil))
+
+  (is (= (remove-node 2 {:id 1}) 
+         {:id 1 :nodes nil}))
+
+  (is (= (remove-node 2 {:id 1 :nodes '({:id 2})})
+         {:id 1 :nodes '(nil)}))
+
+  (is (= (remove-node 3 {:id 1 :nodes '({:id 2 :nodes ({:id 3 :nodes ({:id 5})} {:id 4})})})
+         {:id 1 :nodes '({:id 2 :nodes (nil {:id 4 :nodes nil})})})))
 
 (with-test
   (def leftmost-node
