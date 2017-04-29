@@ -1,7 +1,7 @@
 (ns the-little-clojurian.todo
   (:require [clojure.test :refer :all]))
 
-(declare complete-map* complete-list* complete-node* complete-nodes*)
+(declare complete-map* complete-list* complete-node* complete-nodes* leftmost-node rightmost-node)
 
 (with-test
   (def leftmost-node
@@ -23,6 +23,28 @@
          {:id 2}))
 
   (is (= (leftmost-node {:id 1 :nodes '({:id 2 :nodes ({:id 3})})}) 
+         {:id 3})))
+
+(with-test
+  (def rightmost-node
+    (fn [root]
+      (cond (nil? root) nil
+            (empty? (:nodes root)) root
+            :else (rightmost-node (last (:nodes root))))))
+
+  (is (= (rightmost-node nil) 
+         nil))
+  
+  (is (= (rightmost-node {:id 1})
+         {:id 1}))
+
+  (is (= (rightmost-node {:id 1 :nodes '({:id 2})})
+         {:id 2}))
+
+  (is (= (rightmost-node {:id 1 :nodes '({:id 2} {:id 3})})
+         {:id 3}))
+  
+  (is (= (rightmost-node {:id 1 :nodes '({:id 2 :nodes ({:id 3})})})
          {:id 3})))
 
 (with-test 
