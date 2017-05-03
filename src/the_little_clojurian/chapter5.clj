@@ -134,7 +134,21 @@
   (is (= (eqlist? '(strawberry ice cream) '(strawberry cream ice)) false))
   (is (= (eqlist? '((coffee) (cup)) '((coffee) (cup))) true)))
 
+(with-test
+  (def equal? 
+    (fn [s1 s2]
+      (cond (and (atom? s1) (atom? s2)) (equan? s1 s2)
+            (or (atom? s1) (atom? s2)) false
+            :else (eqlist? s1 s2))))
+  
+  (is (= (equal? 'a 'a) true))
+  (is (= (equal? 'a 'b) false))
+  (is (= (equal? 'a '(a)) false))
+  (is (= (equal? '(a) 'a) false))
+  (is (= (equal? '(a) '(a)) true))
+  (is (= (equal? '(a) '(b)) false)))
 
+;; exercises
 (with-test 
   (def replace* 
     (fn [new old l] 
