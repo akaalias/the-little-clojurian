@@ -33,3 +33,54 @@
   (is (= (value-infix '(1 + 3)) 4))
   (is (= (value-infix '(1 + (3 pow 4))) 82)))
 
+(with-test
+  (def operator
+    (fn [aexp]
+      (car aexp)))
+
+  (is (= (operator '()) nil))
+  (is (= (operator '(+)) '+))
+  (is (= (operator '(+ 1)) '+)))
+
+(with-test
+  (def first-sub-exp
+    (fn [aexp]
+      (car (cdr aexp))))
+
+  (is (= (first-sub-exp '()) nil))
+  (is (= (first-sub-exp '(+)) nil))
+  (is (= (first-sub-exp '(+ 1)) 1))
+  (is (= (first-sub-exp '(+ 1 2)) 1)))
+
+(with-test
+  (def second-sub-exp
+    (fn [aexp]
+      (car (cdr (cdr aexp)))))
+
+  (is (= (second-sub-exp '()) nil))
+  (is (= (second-sub-exp '(+)) nil))
+  (is (= (second-sub-exp '(+ 1)) nil))
+  (is (= (second-sub-exp '(+ 1 2)) 2))
+  (is (= (second-sub-exp '(+ 1 2 3)) 2)))
+
+(with-test
+  (def value-prefix
+    (fn [nexp]
+      (cond (atom? nexp) nexp
+            (eq? (operator nexp) '+) (+ (value-prefix (first-sub-exp nexp))
+                                         (value-prefix (second-sub-exp nexp)))
+            (eq? (operator nexp) '*) (* (value-prefix (first-sub-exp nexp))
+                                        (value-prefix (second-sub-exp nexp)))
+            :else (int (java.lang.Math/pow (value-prefix (first-sub-exp nexp))
+                                           (value-prefix (second-sub-exp nexp)))))))
+
+  (is (= (value-prefix 1) 1))
+  (is (= (value-prefix '(+ 1 3)) 4))
+  (is (= (value-prefix '(+ 1 (* 2 2))) 5))
+  (is (= (value-prefix '(+ 1 (pow 3 4))) 82)))
+
+;; The Eight Commandment
+;;
+;; USE HELP FUNTIONS TO ABSTRACT FROM REPRESENTATIONS
+;;
+;;
