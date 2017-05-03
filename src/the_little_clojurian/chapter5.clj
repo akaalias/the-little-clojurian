@@ -5,6 +5,8 @@
             [the-little-clojurian.chapter3 :refer :all]
             [the-little-clojurian.chapter4 :refer :all]))
 
+(declare equal?)
+
 (with-test
   (def rember* 
     (fn [a l]
@@ -118,11 +120,7 @@
     (fn [l1 l2] 
       (cond (and (null? l1) (null? l2)) true
             (or (null? l1) (null? l2)) false
-            (and (atom? (car l1)) (atom? (car l2))) (and (equan? (car l1) (car l2))
-                                                         (eqlist? (cdr l1) (cdr l2)))
-            (or (atom? (car l1)) 
-                (atom? (car l2))) false
-            :else (and (eqlist? (car l1) (car l2))
+            :else (and (equal? (car l1) (car l2))
                        (eqlist? (cdr l1) (cdr l2))))))
   
   (is (= (eqlist? '() '()) true))
@@ -147,6 +145,27 @@
   (is (= (equal? '(a) 'a) false))
   (is (= (equal? '(a) '(a)) true))
   (is (= (equal? '(a) '(b)) false)))
+
+;; The Sixth Commandment
+;;
+;; SIMPLIFY ONLY AFTER THE FUNCTION IS CORRECT
+;;
+;; (Refactor only when all tests are passing)
+
+;; Example refactor of rember from chapter 3 (Renamed to keep the old one intact)
+(with-test
+  (def rember2
+    (fn [s l]
+      (cond (null? l) '()
+            (equal? (car l) s) (cdr l)
+            :else (rember2 s (cdr l)))))
+
+  (is (= (rember 'and '()) '()))
+  (is (= (rember 'and '(and)) '()))
+  (is (= (rember 'and '(bacon lettuce and tomato)) '(bacon lettuce tomato)))
+  (is (= (rember 'mint '(lamb chops and mint jelly)) '(lamb chops and jelly)))
+  (is (= (rember 'mint '(lamb chops and mint flavored mint jelly)) '(lamb chops and flavored mint jelly))))
+
 
 ;; exercises
 (with-test 
