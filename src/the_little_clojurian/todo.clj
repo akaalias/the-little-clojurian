@@ -125,7 +125,13 @@
          '({:id 1} {:id 2 :complete true})))
   
   (is (= (complete-nodes* 2 '({:id 1 :nodes ({:id 2})}))
-         '({:id 1 :nodes ({:id 2 :complete true})}))))
+         '({:id 1 :nodes ({:id 2 :complete true})})))
+
+  (is (= (complete-nodes* 2 '({:id 0} {:id 1 :nodes ({:id 2})}))
+         '({:id 0} {:id 1 :nodes ({:id 2 :complete true})})))
+
+  (is (= (complete-nodes* 4 '({:id 0} {:id 1} {:id 2 :nodes ({:id 4 :nodes ({:id 5})})} {:id 3}))
+         '({:id 0} {:id 1} {:id 2 :nodes ({:id 4 :complete true :nodes ({:id 5})})} {:id 3}))))
 
 (with-test 
   (def complete-node* 
