@@ -3,7 +3,7 @@
 A TDD approach to following along "The Little Schemer"'s conversational question/answer style using Clojure's `with-test` macro.
 
 
-```
+```clojure
 (with-test
   (def rember* 
     (fn [a l]
