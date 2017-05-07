@@ -1,6 +1,27 @@
 # The Little Clojurian
 
-A TDD approach to following along "The Little Schemer"
+A TDD approach to following along "The Little Schemer"'s conversational question/answer style using Clojure's `with-test` macro.
+
+
+```
+(with-test
+  (def rember* 
+    (fn [a l]
+      (cond (null? l) '()
+            (atom? (car l)) (cond (eq? (car l) a) (rember* a (cdr l))
+                                  :else (cons (car l)
+                                              (rember* a (cdr l))))
+            :else (cons (rember* a (car l))
+                        (rember* a (cdr l))))))
+ 
+  (is (= (rember* 'cup '()) '()))
+  (is (= (rember* 'cup '(coffee)) '(coffee)))
+  (is (= (rember* 'cup '(cup)) '()))
+  (is (= (rember* 'cup '(coffee cup)) '(coffee)))
+  (is (= (rember* 'cup '((cup))) '(())))
+  (is (= (rember* 'cup '(coffee (cup) and (another) cup)) '(coffee () and (another))))
+  (is (= (rember* 'sauce '(((tomato sauce)) ((bean) sauce) (and ((flying)) sauce))) '(((tomato)) ((bean)) (and ((flying)))))))
+```
 
 ## Usage
 
