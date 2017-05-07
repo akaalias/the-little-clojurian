@@ -8,6 +8,10 @@ A TDD approach to following along "The Little Schemer"
 
 All tests are written in-line using the `with-test` macro. It's a lot of fun. Run all tests with `lein run`
 
+### Shipping
+
+Run `./ship.sh` to ensure all tests are passing locally.
+
 ## License
 
 Copyright © 2017 Alexis Rondeau
