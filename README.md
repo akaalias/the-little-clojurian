@@ -103,7 +103,7 @@ The function-definition, including tests for `lat?` looks like this for example:
 
 The full transcript of Chapter 1 in Clojure is:
 
-```
+```clojure
 (ns the-little-clojurian.chapter1
   (:require [clojure.test :refer :all]))
 
@@ -248,13 +248,13 @@ Yesterday I made it through Chapter 2 and as before I've enjoyed it. I have come
 
 First I write the application of the function under test, then the expectation such as:
 
-```
+```clojure
 (is (= (lat? '(Jack Sprat could eat no chicken fat)) true))
 ```
 
 I understand that calling functions recursively, as done in the book, isn't idiomatic in Clojure.  
 
-```
+```clojure
 (def lat? 
     (fn [l]
       (cond (null? l) true
@@ -266,7 +266,7 @@ There's `recur` for that. For now, I like to continue with calling functions reg
 
 On the same note, I recognize that Clojure has great helper functions such as `every?` that I could leverage directly. For example, the above mentioned function `lat?` could become a one-liner such as by asking "is every expression in the list not a list itself".
 
-```
+```clojure
 (def lat? 
   (fn [l] 
     (every? #(not (list? %))) l)))
@@ -278,7 +278,7 @@ Lastly, I am getting into the habit of tiny, regular commits. I now make a commi
 
 If you are interested, the full listing for Chapter 2 is as follows:
 
-```
+```clojure
 (ns the-little-clojurian.chapter2
   (:require [clojure.test :refer :all]
             [the-little-clojurian.chapter1 :refer :all]))
@@ -341,7 +341,7 @@ As you can see from below, the function asks three questions:
 
 *Note that I am using `cones` in my listings to stay consistent with the book.
 
-```
+```clojure
 (with-test
   (def rember 
     (fn [a lat] 
@@ -359,20 +359,21 @@ As you can see from below, the function asks three questions:
 
 I have begun to always start my tests with the null-case, here it's...
 
-```
+```clojure
 (is (= (rember 'and '()) '()))
 ```
 ...which drives out the question #1.
 
 Then I write the minimal test that drives out the main behavior without the need for recursion...
 
-```
+```clojure
 (is (= (rember 'and '(and)) '()))
 ```
 ...which drives out the question #2
 
 And then finally I write a test that drives out question #3 such as...
-```
+
+```clojure
 (is (= (rember 'and '(bacon lettuce and tomato)) '(bacon lettuce tomato)))
 ```
 
@@ -389,7 +390,7 @@ So, for example
 
 Here, again, I started with the simplest case with `'()` for `l` and worked through the rest of the example step by step following the book.
 
-```
+```clojure
 (with-test
   (def firsts 
     (fn [l]
@@ -425,7 +426,7 @@ The questions this function needs to ask and answer are:
 2. Is `(car lat)` equal to `old` and if so, `(cons old (cons new (cdr lat)))` which basically says append `new`, then `old` onto the rest.
 3. Else `(cons (car lat))` onto the natural recursion of this function with `new`, `old` and `(cdr lat)`.
 
-```
+```clojure
 (with-test
   (def insertR 
     (fn [new old lat]
@@ -448,7 +449,7 @@ The questions this function needs to ask and answer are:
 
 Now, the next function, `insertL` inserts a new element to the left of an existing one. The only difference here was what we do in case `(eq? (car lat) old)` namely `(cons new lat)`
 
-```
+```clojure
 (with-test
   (def insertL
     (fn [new old lat]
@@ -466,7 +467,7 @@ Now up to this point the functions only replace or insert or remove the _first o
 
 When you look at `multimember` you'll notice that we drop the current occurrence of `a` in `lat` and recur via `(multirember a (cdr lat)` which will drop any following occurrences as well.
 
-```
+```clojure
 (with-test
   (def multirember 
     (fn [a lat]
@@ -481,7 +482,7 @@ When you look at `multimember` you'll notice that we drop the current occurrence
 
 This pattern persisted for the following, improved versions of `insertL`, `insertR` and `subst`:
 
-```
+```clojure
 (with-test
   (def multiinsertR
     (fn [new old lat]
@@ -541,7 +542,7 @@ Given `n` and `m`, I want to evaluate their sum. For that to happen, I need to a
 
 If we were to add 1 and 3, the result of 4 would be calculated as:
 
-```
+```clojure
 (pluss 1 3)
 1 + (pluss 1 2)
 1 + 1 + (pluss 1 1)
@@ -551,7 +552,7 @@ If we were to add 1 and 3, the result of 4 would be calculated as:
 
 Pretty cool.
 
-```
+```clojure
 (with-test
   (def pluss
     (fn [n m]
@@ -572,7 +573,7 @@ For example, take `occur` which takes an atom `a` and a list `lat` as its argume
 
 To build the simple algorithm, I start out writing the bare minimum setup for the first, smallest test:
 
-```
+```clojure
 (with-test
   (def occur
     (fn [a lat]))
@@ -584,7 +585,7 @@ Running the test will fail since the function currently, and intentionally, only
 
 I can fix this situation by writing the smallest possible solution which is to return 0, hardcoded:
 
-```
+```clojure
 (with-test
   (def occur
     (fn [a lat] 0))
@@ -594,7 +595,7 @@ I can fix this situation by writing the smallest possible solution which is to r
 
 Our first test will now pass. We could, if we wanted to, make a commit at this point. On to the next.
 
-```
+```clojure
 (with-test
   (def occur
     (fn [a lat] 0))
@@ -605,7 +606,7 @@ Our first test will now pass. We could, if we wanted to, make a commit at this p
 
 Running the tests will now fail for scenario 2 when we expect to receive 1 as the value and not 0. The smallest fix to solve for this is to introduce a conditional.
 
-```
+```clojure
 (with-test
   (def occur
     (fn [a lat]
@@ -618,7 +619,7 @@ Running the tests will now fail for scenario 2 when we expect to receive 1 as th
 
 Great! All tests are passing now. Now, on to the next, simplest test-case where `(occur 'a '(b))` should evaluate to 0.
 
-```
+```clojure
 (with-test
   (def occur
     (fn [a lat]
@@ -632,7 +633,7 @@ Great! All tests are passing now. Now, on to the next, simplest test-case where 
 
 The third test fails naturally. To fix it, I now have to introduce a new condition to check if `(car lat)` is equal to `a`:
 
-```
+```clojure
 (with-test
   (def occur
     (fn [a lat]
@@ -647,7 +648,7 @@ The third test fails naturally. To fix it, I now have to introduce a new conditi
 
 Now, let's test for multiple occurrences of `a` in `lat`: `(is (= (occur 'a '(a a)) 2))`
 
-```
+```clojure
 (with-test
   (def occur
     (fn [a lat]
@@ -663,7 +664,7 @@ Now, let's test for multiple occurrences of `a` in `lat`: `(is (= (occur 'a '(a 
 
 The test will fail when run. Now we have to fix it by introducing adding 1 to the natural recursion of the function as follows: ```(add1 (occur a (cdr lat)))```
 
-```
+```clojure
 (with-test
   (def occur
     (fn [a lat]
@@ -681,7 +682,7 @@ Splendid, all tests are passing.
 
 Now, I want to make sure that we get the right result, when the list is mixed, such as `(is (= (occur 'a '(a b c a)) 2))`
 
-```
+```clojure
 (with-test
   (def occur
     (fn [a lat]
@@ -698,7 +699,7 @@ Now, I want to make sure that we get the right result, when the list is mixed, s
 
 Adding the test makes it fail of course, since we're not accounting for this scenario. It's a simple fix, we need to allow our `:else` branch to continue searching for `a`s with `(occur a (cdr lat))`. The final solution to `occur` is
 
-```
+```clojure
 (with-test
   (def occur
     (fn [a lat]
@@ -716,7 +717,8 @@ Adding the test makes it fail of course, since we're not accounting for this sce
 I think this is pretty cool. We've got a first set of reasonable inputs and outputs covered. This would be a great time to run the full test-suite with `lein test`, and if everything passes, make a commit and push to master. For this I usually make myself a tiny script named `ship.sh` that runs the test-suite one final time and does the git push for me:
 
 ship.sh
-```
+
+```bash
 #!/bin/bash
 
 lein test && git push origin master
@@ -726,7 +728,7 @@ Nothing fancy, but it keeps me from habitually doing a `git push origin master` 
 
 Anyways, I enjoyed showing you how I build my functions with TDD and baby-steps to arrive at a good place to commit and push. The full listing of my (un-refactored) chapter 4 is as follows:
 
-```
+```clojure
 (ns the-little-clojurian.chapter4
   (:require [clojure.test :refer :all]
             [the-little-clojurian.chapter1 :refer :all]
@@ -1007,7 +1009,7 @@ Learned how to deal with nested lists by asking at least 3 questions:
 
 You can see this pattern in action on `rember*` which removes any occurrence of `a` in `l` regardless of how deep `a`s are hidden in the nested list. (*, or star is added to the function name to denote that it's recurring on both, `car` and `cdr`.)
 
-```
+```clojure
 (with-test
   (def rember* 
     (fn [a l]
@@ -1035,7 +1037,7 @@ The questions are again:
 * atom? – checks if `car l` is what we're looking for and if so, adds a new element
 * else – recurs on both `car l` and `cdr l`
 
-```
+```clojure
 (with-test
   (def insertR*
     (fn [new old l]
@@ -1056,7 +1058,7 @@ The questions are again:
   (is (= (insertR* 'new 'old '((these) old ((shoes old) perfume))) '((these) old new ((shoes old new) perfume)))))
 ```
 
-```
+```clojure
 (with-test
   (def insertL*
     (fn [new old l] 
@@ -1074,7 +1076,7 @@ The questions are again:
 
 Then, the same pattern applies to `subst*` which substitutes `new` with `old` in `l`
 
-```
+```clojure
 (with-test 
   (def subst*
     (fn [new old l] 
@@ -1094,7 +1096,7 @@ Then, `member*` returns `true` if `a` can be found in `l`, otherwise it returns 
 
 Note that instead of returning a list on `(null l)` it returns `false` which represents that the element couldn't be found and we've reached the end where we can't look no further.
 
-```
+```clojure
 (with-test
   (def member* 
     (fn [a l] 
@@ -1115,7 +1117,7 @@ Note that instead of returning a list on `(null l)` it returns `false` which rep
 
 A personal favorite of mine is `leftmost` which returns the left-most element in `l`. It's a bit simpler than the functions before. It recurs **only** on `(car l)` unless it is an atom:
 
-```
+```clojure
 (with-test
   (def leftmost 
     (fn [l]
@@ -1133,7 +1135,7 @@ A personal favorite of mine is `leftmost` which returns the left-most element in
 
 At the end of the chapter, the authors use recurring on a nested list to test for equality of any s-expression:
 
-```
+```clojure
 (with-test
   (def eqlist?
     (fn [l1 l2] 
