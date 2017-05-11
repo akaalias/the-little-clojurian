@@ -27,27 +27,14 @@ A TDD approach to following along "The Little Schemer"'s conversational question
 
 ### Testing
 
-All tests are written in-line using the `with-test` macro. It's a lot of fun. Run all tests with `lein run`
-
-### Shipping
-
-Run `./ship.sh` to ensure all tests are passing locally.
-
-## License
-
-Copyright © 2017 Alexis Rondeau
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
-
-## Full transcript
+All tests are written in-line using the `with-test` macro. It's a lot of fun. Run all tests with `lein test`
 
 ## The Little Schemer in Clojure – Chapter 1 Recap
 
 This is a series of small blog posts about following along the book 'The Little Schemer' using Clojure.
 
 ### Why
-This book is great fun to read and it is easy to understand. The format is a kind conversation between the author and reader. And finally, the book even has dedicated pages for jelly-stains! It teaches programming small but realistic applications with the least amount of jargon and concepts. I think it is a perfect place to start learning to program if you haven't done so yet. It also helps seasoned developers like myself get back to the fundamentals of how to think about computation. 
+This book is great fun to read and it is easy to understand. The format is a kind (of) conversation between the author and reader. And finally, the book even has dedicated pages for jelly-stains! It teaches programming small but realistic applications with the least amount of jargon and concepts. I think it is a perfect place to start learning to program if you haven't done so yet. It also helps seasoned developers like myself get back to the fundamentals of how to think about computation. 
 
 For me, the challenge was to follow along in the book via programming in Clojure, a recent JVM-based Lisp. I recently worked on a side-project where the most smartest solution would have been a recursive algorithm but I wasn't able to solve it without head-scratching all the way through. With this series I want to recap my recursion skills and learn them through Clojure, my favorite programming language.
 
@@ -1403,3 +1390,10 @@ To make our dream of (fairly unreadable) parenthesis number crunching real, all 
 ```
 
 Anyways, that's what I've taken away from the chapter.
+
+## License
+
+Copyright © 2017 Alexis Rondeau
+
+Distributed under the Eclipse Public License either version 1.0 or (at
+your option) any later version.
