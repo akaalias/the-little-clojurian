@@ -1351,7 +1351,7 @@ So, instead of using the numeral...
 
 In terms of API, I would like then to be able to write `1 + 1` as follows:
 
-```
+```clojure
 (+ '( () ) '( () ))
 ;; => 2
 ```
@@ -1360,7 +1360,7 @@ Clearly, the idea of addition or subtraction doesn't change just because I've ch
 
 Our function to represent the operator `+` was 
 
-```
+```clojure
   (def + (fn [n m] 
                 (cond (zero? m) n
                       :else (add1 (+ n (sub1 m))))))
@@ -1368,7 +1368,7 @@ Our function to represent the operator `+` was
 
 To make our dream of (fairly unreadable) parenthesis number crunching real, all we have to do is rewrite our helper functions `zero?`, `add1` and `sub1` and we're off to the races:
 
-```
+```clojure
 (with-test
   (def zero? 
     (fn [n] (null? n)))
