@@ -19,21 +19,6 @@
   (is (= (numbered? '(3 + (4 * 7))))))
 
 (with-test
-  (def value-infix
-    (fn [u] 
-      (cond (atom? u) u
-            (eq? (infix-operator u) '+) (+ (value-infix (infix-first-sub-exp u))
-                                          (value-infix (infix-second-sub-exp u)))
-            (eq? (infix-operator u) '*) (- (value-infix (infix-first-sub-exp u))
-                                           (value-infix (infix-second-sub-exp u)))
-            :else (int (java.lang.Math/pow (value-infix (infix-first-sub-exp u))
-                                           (value-infix (infix-second-sub-exp u)))))))
-
-  (is (= (value-infix 13) 13))
-  (is (= (value-infix '(1 + 3)) 4))
-  (is (= (value-infix '(1 + (3 pow 4))) 82)))
-
-(with-test
   (def infix-operator
     (fn [aexp]
       (car (cdr aexp))))
@@ -62,6 +47,21 @@
   (is (= (infix-second-sub-exp '(1 +)) nil))
   (is (= (infix-second-sub-exp '(1 + 2)) 2))
   (is (= (infix-second-sub-exp '(1 + 3)) 3)))
+
+(with-test
+  (def value-infix
+    (fn [u] 
+      (cond (atom? u) u
+            (eq? (infix-operator u) '+) (+ (value-infix (infix-first-sub-exp u))
+                                          (value-infix (infix-second-sub-exp u)))
+            (eq? (infix-operator u) '*) (- (value-infix (infix-first-sub-exp u))
+                                           (value-infix (infix-second-sub-exp u)))
+            :else (int (java.lang.Math/pow (value-infix (infix-first-sub-exp u))
+                                           (value-infix (infix-second-sub-exp u)))))))
+
+  (is (= (value-infix 13) 13))
+  (is (= (value-infix '(1 + 3)) 4))
+  (is (= (value-infix '(1 + (3 pow 4))) 82)))
 
 (with-test
   (def operator
