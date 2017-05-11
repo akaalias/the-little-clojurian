@@ -1170,3 +1170,236 @@ At the end of the chapter, the authors use recurring on a nested list to test fo
 
 I am starting to realize how great it is to have a set of tests right away with any function definition. Refactoring will be easy and give me confidence that everything still works. Pretty stoked!
 
+
+## The Little Schemer in Clojure – Recap Chapter 6
+
+**Shadows**
+
+Using helper functions increases readability and helps abstract away representations. 
+
+In particular, the example is a simple calculating function `value` such as `(value '(1 + (7 + 11)) ;; => 19`
+
+We can implement this with standard procedures and recursion:
+
+```clojure
+(with-test
+  (def value
+    (fn [u] 
+      (cond (atom? u) u
+            (eq? (car (cdr u)) '+) (+ (value (car u))
+                                          (value (car (cdr (cdr u)))))
+            (eq? (car (cdr u)) '*) (- (value (car u))
+                                           (value (car (cdr (cdr u)))))
+            :else (int (java.lang.Math/pow (value (car u))
+                                           (value (car (cdr (cdr u)))))))))
+                                           
+  (is (= (value 13) 13))
+  (is (= (value '(1 + 3)) 4))
+  (is (= (value '(1 + (3 pow 4))) 82)))
+```
+
+Now, you can already see a lot of visual noise. There is a _lot_ of `car`-ing and `cdr`-ing about. If you squint your eyes a little, you'll also notice that they all look similar. in fact, there is a lot of repetition in this function:
+
+We see this pattern three times and each it's along the lines of: 
+
+```clojure
+((eq? (car (cdr u)) 'OPERATOR) (OPERATOR (value (car u)) (value (car (cdr (cdr u))))))
+```
+
+Since we know that our "language" right now is infix arithmetic expressions such as
+
+`(1 + 2)` and `(1 + (4 * 999))`
+
+...we can extract helper functions that get the `operator`, the `first sub expression - 1` and the `second sub expression - 2` like so: 
+
+```clojure
+(with-test
+  (def operator
+    (fn [aexp]
+      (car (cdr aexp))))
+
+  (is (= (operator '()) nil))
+  (is (= (operator '(1)) nil))
+  (is (= (operator '(1 + )) '+))
+  (is (= (operator '(1 + 2)) '+)))
+  
+(with-test
+  (def first-sub-exp
+    (fn [aexp]
+      (car aexp)))
+
+  (is (= (first-sub-exp '()) nil))
+  (is (= (first-sub-exp '(1)) 1))
+  (is (= (first-sub-exp '(1 + 2)) 1))
+  (is (= (first-sub-exp '(2 + 1)) 2)))
+
+(with-test
+  (def second-sub-exp
+    (fn [aexp] (car (cdr (cdr aexp)))))
+
+  (is (= (second-sub-exp '()) nil))
+  (is (= (second-sub-exp '(1)) nil))
+  (is (= (second-sub-exp '(1 +)) nil))
+  (is (= (second-sub-exp '(1 + 2)) 2))
+  (is (= (second-sub-exp '(1 + 3)) 3)))
+```
+
+And then, since we have test-coverage already, refactor our `value` function to be...
+
+```clojure
+(with-test
+  (def value
+    (fn [u] 
+      (cond (atom? u) u
+            (eq? (operator u) '+) (+ (value (first-sub-exp u))
+                                          (value (second-sub-exp u)))
+            (eq? (operator u) '*) (- (value (first-sub-exp u))
+                                           (value (second-sub-exp u)))
+            :else (int (java.lang.Math/pow (value (first-sub-exp u))
+                                           (value (second-sub-exp u)))))))
+
+  (is (= (value 13) 13))
+  (is (= (value '(1 + 3)) 4))
+  (is (= (value '(1 + (3 pow 4))) 82)))
+```
+
+Dandy. The new help functions help read this much better.
+
+### Changing Your Mind
+
+Now, say, you wake up today and would like to change your newly-born arithmetic language to be written in prefix notation, such as `(+ 1 2)`. In a way, I want to say:
+
+> I've changed my mind. Now, I want have `(+ 1 2)` express the common arithmetic expression that evaluates to `4`.
+
+The changes needed to make this happen are now trivial since we have used help functions to hide the representation of `operator`, `first sub expression` and `second sub expression`.
+
+Simply changing the helper functions as follows implements the prefix notation without having to change our `value` function. 
+
+You have to adjust your tests accordingly, of course, and, in a way, doing so is as much as saying 
+
+> "I want to change this and it should work as follows..."
+
+```clojure
+(with-test
+  (def operator
+    (fn [aexp]
+      (car aexp)))
+
+  (is (= (operator '()) nil))
+  (is (= (operator '(+)) '+))
+  (is (= (operator '(+ 1)) '+)))
+
+(with-test
+  (def first-sub-exp
+    (fn [aexp]
+      (car (cdr aexp))))
+
+  (is (= (first-sub-exp '()) nil))
+  (is (= (first-sub-exp '(+)) nil))
+  (is (= (first-sub-exp '(+ 1)) 1))
+  (is (= (first-sub-exp '(+ 1 2)) 1)))
+
+(with-test
+  (def second-sub-exp
+    (fn [aexp]
+      (car (cdr (cdr aexp)))))
+
+  (is (= (second-sub-exp '()) nil))
+  (is (= (second-sub-exp '(+)) nil))
+  (is (= (second-sub-exp '(+ 1)) nil))
+  (is (= (second-sub-exp '(+ 1 2)) 2))
+  (is (= (second-sub-exp '(+ 1 2 3)) 2)))
+
+(with-test
+  (def value-prefix
+    (fn [nexp]
+      (cond (atom? nexp) nexp
+            (eq? (operator nexp) '+) (+ (value-prefix (first-sub-exp nexp))
+                                         (value-prefix (second-sub-exp nexp)))
+            (eq? (operator nexp) '*) (* (value-prefix (first-sub-exp nexp))
+                                        (value-prefix (second-sub-exp nexp)))
+            :else (int (java.lang.Math/pow (value-prefix (first-sub-exp nexp))
+                                           (value-prefix (second-sub-exp nexp)))))))
+
+  (is (= (value-prefix 1) 1))
+  (is (= (value-prefix '(+ 1 3)) 4))
+  (is (= (value-prefix '(+ 1 (* 2 2))) 5))
+  (is (= (value-prefix '(+ 1 (pow 3 4))) 82)))
+```
+
+This is nice. We have changed `value`s language by changing the helper functions without changing its own structure. 
+
+This way, we are able to demonstrate that we can represent the arithmetic expression **1 + 1** in several ways: 
+
+* `(+ 1 1)` to make it feel lispy
+* `(1 + 1)` to make it feel 'normal' and
+* `(1 1 +)` if we wanted to accommodate friends that read from right to left more naturally
+
+After all, they _mean_ the same thing but in different ways. 
+
+### Parental Controls – Braces as Numbers 
+
+Now, another example: Let's say we wanted to _represent_ numbers differently but wanted, as reasonable human beings, to maintain the idea of plus, minus, multiplication and division.
+
+So, instead of using the numeral...
+
+* **0**, I would like to use `()` (a list of zero items)
+* **1**, I would like to use `(())` (a list of one items)
+* **2**, I would like to use `(() ())` (a list of two items)
+* **3**, I would like to use `(() () ())` (a list of three items)
+* and so on...
+
+In terms of API, I would like then to be able to write `1 + 1` as follows:
+
+```
+(+ '( () ) '( () ))
+;; => 2
+```
+
+Clearly, the idea of addition or subtraction doesn't change just because I've changed how I represent my numbers, right? 
+
+Our function to represent the operator `+` was 
+
+```
+  (def + (fn [n m] 
+                (cond (zero? m) n
+                      :else (add1 (+ n (sub1 m))))))
+```
+
+To make our dream of (fairly unreadable) parenthesis number crunching real, all we have to do is rewrite our helper functions `zero?`, `add1` and `sub1` and we're off to the races:
+
+```
+(with-test
+  (def zero? 
+    (fn [n] (null? n)))
+
+  (is (= (zero? '()) true))
+  (is (= (zero? '(())) false)))
+
+(with-test
+  (def add1
+    (fn [n]
+      (cons '() n)))
+  (is (= (add1 '()) '(())))
+  (is (= (add1 '(())) '(() ())))
+  (is (= (add1 '(() ())) '(() () ()))))
+
+(with-test
+  (def sub1
+    (fn [n] (cdr n)))
+
+  (is (= (sub1 '()) '()))
+  (is (= (sub1 '(())) '()))
+  (is (= (sub1 '(() ())) '(()))))
+
+(with-test
+  (def + (fn [n m] 
+            (cond (zero? m) n
+                  :else (add1 (+ n (sub1 m))))))
+
+  (is (= (+ '() '()) '()))
+  (is (= (+ '(()) '())) '(()))
+  (is (= (+ '(() ()) '(())) '(() () ()))))
+```
+
+Anyways, that's what I've taken away from the chapter.
