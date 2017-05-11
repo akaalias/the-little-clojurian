@@ -50,7 +50,7 @@ Once...
 Then, I...
 1. Write the test as it appears in the book,
 2. use `C-c k` to compile the file and 
-3. `C-c ,` to run the tests. 
+3. `C-c ,` to run the tests. (I have added `(setq cider-test-infer-test-ns (lambda (ns) ns))` in my init.el to make this work)
 
 When I have a failing test, I fix the implementation only as much as to get the test to pass. Following the book, I continue this pattern until the chapter is over.
 
