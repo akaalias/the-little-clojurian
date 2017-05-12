@@ -90,3 +90,16 @@
   (is (= (intersect '(1 2) '(2 3)) '(2)))
   (is (= (intersect '(1 2 3 4) '(4 3 2 1)) '(1 2 3 4)))
   (is (= (intersect '(stewed tomatoes and macaroni) '(macaroni and cheese)) '(and macaroni))))
+
+(with-test
+  (def union
+    (fn [set1 set2]
+      (cond (null? set1) set2
+            (member? (car set1) set2) (union (cdr set1) set2)
+            :else (cons (car set1) (union (cdr set1) set2)))))
+
+  (is (= (union '() '()) '()))
+  (is (= (union '(1) '(1)) '(1)))
+  (is (= (union '(1) '(1 2)) '(1 2)))
+  (is (= (union '(1 2 3) '(4 5 6)) '(1 2 3 4 5 6)))
+  (is (= (union '(stewed tomatoes and macaroni casserole) '(macaroni and cheese)) '(stewed tomatoes casserole macaroni and cheese))))
