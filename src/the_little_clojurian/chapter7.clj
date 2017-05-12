@@ -75,3 +75,18 @@
   (is (= (intersect? '(1) '(1)) true))
   (is (= (intersect? '(1) '(2)) false))
   (is (= (intersect? '(stewed tomatoes and macaroni) '(macaroni and cheese)) true)))
+
+(with-test
+  (def intersect
+    (fn [set1 set2]
+      (cond (null? set1) '()
+            (member? (car set1) set2) (cons (car set1) 
+                                            (intersect (cdr set1) set2))
+            :else (intersect (cdr set1) set2))))
+
+  (is (= (intersect '() '()) '()))
+  (is (= (intersect '(1) '(1)) '(1)))
+  (is (= (intersect '(1) '(2)) '()))
+  (is (= (intersect '(1 2) '(2 3)) '(2)))
+  (is (= (intersect '(1 2 3 4) '(4 3 2 1)) '(1 2 3 4)))
+  (is (= (intersect '(stewed tomatoes and macaroni) '(macaroni and cheese)) '(and macaroni))))
