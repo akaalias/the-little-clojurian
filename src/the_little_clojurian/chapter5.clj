@@ -92,7 +92,7 @@
   (def member* 
     (fn [a l] 
       (cond (null? l) false
-            (atom? (car l)) (or (eq? (car l) a)
+            (atom? (car l)) (or (equan? (car l) a)
                                 (member* a (cdr l)))
             :else (or (member* a (car l))
                       (member* a (cdr l))))))
