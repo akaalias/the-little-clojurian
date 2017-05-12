@@ -38,8 +38,8 @@
   (def subset? 
     (fn [set1 set2] 
       (cond (null? set1) true
-            (member? (car set1) set2) (subset? (cdr set1) set2)
-            :else false)))
+            :else (and (member? (car set1) set2)
+                       (subset? (cdr set1) set2)))))
 
   (is (= (subset? '() '()) true))
   (is (= (subset? '(1) '()) false))
@@ -48,3 +48,18 @@
   (is (= (subset? '(5 chicken wings) '(5 hamburgers 2 pieces fried chicken and light duckling wings)) true))
   (is (= (subset? '(4 pounds of horseradish) '(four pounds chicken and 5 ounces horseradish)) false)))
 
+(with-test
+  (def eqset? 
+    (fn [set1 set2] 
+      (and (subset? set1 set2)
+           (subset? set2 set1))))
+
+  (is (= (eqset? '() '()) true))
+  (is (= (eqset? '(1) '()) false))
+  (is (= (eqset? '(1) '(1)) true))
+  (is (= (eqset? '(1) '(2)) false))
+  (is (= (eqset? '(1 2) '(1 2)) true))
+  (is (= (eqset? '(1 2) '(2 1)) true))
+  (is (= (eqset? '(1 2 3 4) '(1 2 3 4)) true))
+  (is (= (eqset? '(1 2 3 4) '(4 3 2 1)) true))
+  (is (= (eqset? '(:foo :bar :baz) '(:baz :bar :foo)) true)))
