@@ -63,3 +63,15 @@
   (is (= (eqset? '(1 2 3 4) '(1 2 3 4)) true))
   (is (= (eqset? '(1 2 3 4) '(4 3 2 1)) true))
   (is (= (eqset? '(:foo :bar :baz) '(:baz :bar :foo)) true)))
+
+(with-test
+  (def intersect? 
+    (fn [set1 set2] 
+      (cond (null? set1) false
+            :else (or (member? (car set1) set2)
+                      (intersect? (cdr set1) set2)))))
+  
+  (is (= (intersect? '() '()) false))
+  (is (= (intersect? '(1) '(1)) true))
+  (is (= (intersect? '(1) '(2)) false))
+  (is (= (intersect? '(stewed tomatoes and macaroni) '(macaroni and cheese)) true)))
