@@ -8,16 +8,16 @@
             [the-little-clojurian.chapter7 :refer :all]))
 
 (with-test
-  (def set? 
+  (def sett? 
     (fn [lat]
       (cond (null? lat) true
             (member? (car lat) (cdr lat)) false
-            :else (set? (cdr lat)))))
+            :else (sett? (cdr lat)))))
  
-  (is (= (set? '()) true))
-  (is (= (set? '(apple peaches apple plum)) false))
-  (is (= (set? '(apple 3 pear 4 9 apple 3 4)) false))
-  (is (= (set? '(1 2 3 4 5 6 7 8)) true)))
+  (is (= (sett? '()) true))
+  (is (= (sett? '(apple peaches apple plum)) false))
+  (is (= (sett? '(apple 3 pear 4 9 apple 3 4)) false))
+  (is (= (sett? '(1 2 3 4 5 6 7 8)) true)))
 
 (with-test
   (def makeset 
