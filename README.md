@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/akaalias/the-little-clojurian.svg?branch=master)](https://travis-ci.org/akaalias/the-little-clojurian)
+
 # The Little Clojurian
 
 A TDD approach to following along "The Little Schemer"'s conversational question/answer style using Clojure's `with-test` macro.
