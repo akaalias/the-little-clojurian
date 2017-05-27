@@ -2,8 +2,8 @@
   (:require [clojure.test :refer :all]
             [the-little-clojurian.chapter1 :refer :all]))
 
-(with-test 
-  (def lat? 
+(with-test
+  (def lat?
     (fn [l]
       (cond (null? l) true
             (atom? (car l)) (lat? (cdr l))
@@ -28,11 +28,11 @@
              (null? '(atom)))
          false)))
 
-(with-test 
-  (def member? 
+(with-test
+  (def member?
     (fn [a lat]
       (cond (null? lat) false
-            :else (or (eq? (car lat) a) 
+            :else (or (eq? (car lat) a)
                       (member? a (cdr lat))))))
   (testing "evaluates to true"
     (is (= (member? 'meat '(meat)) true))
@@ -43,6 +43,6 @@
     (is (= (member? 'liver '(bagels and lox)) false))
     (is (= (member? 'poached '(fried eggs and scrambled eggs))))))
 
-(def lat? 
-  (fn [l] 
+(def lat?
+  (fn [l]
     (every? (fn [x] (atom? x)) l)))

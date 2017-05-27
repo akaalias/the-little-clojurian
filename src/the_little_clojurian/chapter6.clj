@@ -6,13 +6,13 @@
             [the-little-clojurian.chapter4 :refer :all]
             [the-little-clojurian.chapter5 :refer :all]))
 
-(with-test 
+(with-test
   (def numbered?
-    (fn [aexp] 
+    (fn [aexp]
       (cond (atom? aexp) (number? aexp)
             :else (and (numbered? (car aexp))
                        (numbered? (car (cdr (cdr aexp))))))))
-  
+
   (is (= (numbered? 1) true))
   (is (= (numbered? 'a) false))
   (is (= (numbered? '(3 + 1)) true))
@@ -25,7 +25,7 @@
 
   (is (= (infix-operator '()) nil))
   (is (= (infix-operator '(1)) nil))
-  (is (= (infix-operator '(1 + )) '+))
+  (is (= (infix-operator '(1 +)) '+))
   (is (= (infix-operator '(1 + 2)) '+)))
 
 (with-test
@@ -50,10 +50,10 @@
 
 (with-test
   (def value-infix
-    (fn [u] 
+    (fn [u]
       (cond (atom? u) u
             (eq? (infix-operator u) '+) (+ (value-infix (infix-first-sub-exp u))
-                                          (value-infix (infix-second-sub-exp u)))
+                                           (value-infix (infix-second-sub-exp u)))
             (eq? (infix-operator u) '*) (- (value-infix (infix-first-sub-exp u))
                                            (value-infix (infix-second-sub-exp u)))
             :else (int (java.lang.Math/pow (value-infix (infix-first-sub-exp u))
@@ -98,7 +98,7 @@
     (fn [nexp]
       (cond (atom? nexp) nexp
             (eq? (operator nexp) '+) (+ (value-prefix (first-sub-exp nexp))
-                                         (value-prefix (second-sub-exp nexp)))
+                                        (value-prefix (second-sub-exp nexp)))
             (eq? (operator nexp) '*) (* (value-prefix (first-sub-exp nexp))
                                         (value-prefix (second-sub-exp nexp)))
             :else (int (java.lang.Math/pow (value-prefix (first-sub-exp nexp))
@@ -110,7 +110,7 @@
   (is (= (value-prefix '(+ 1 (pow 3 4))) 82)))
 
 (with-test
-  (def sero? 
+  (def sero?
     (fn [n] (null? n)))
 
   (is (= (sero? '()) true))
@@ -133,7 +133,7 @@
   (is (= (zub1 '(() ())) '(()))))
 
 (with-test
-  (def plusss (fn [n m] 
+  (def plusss (fn [n m]
                 (cond (sero? m) n
                       :else (edd1 (plusss n (zub1 m))))))
 

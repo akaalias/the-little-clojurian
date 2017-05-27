@@ -8,22 +8,22 @@
             [the-little-clojurian.chapter7 :refer :all]))
 
 (with-test
-  (def sett? 
+  (def sett?
     (fn [lat]
       (cond (null? lat) true
             (member? (car lat) (cdr lat)) false
             :else (sett? (cdr lat)))))
- 
+
   (is (= (sett? '()) true))
   (is (= (sett? '(apple peaches apple plum)) false))
   (is (= (sett? '(apple 3 pear 4 9 apple 3 4)) false))
   (is (= (sett? '(1 2 3 4 5 6 7 8)) true)))
 
 (with-test
-  (def makeset 
-    (fn [lat] 
+  (def makeset
+    (fn [lat]
       (cond (null? lat) '()
-            :else (cons (car lat) 
+            :else (cons (car lat)
                         (makeset (multirember (car lat)
                                               (cdr lat)))))))
 
@@ -35,8 +35,8 @@
   (is (= (makeset '(apple 3 pear 4 9 apple 3 4)) '(apple 3 pear 4 9))))
 
 (with-test
-  (def subset? 
-    (fn [set1 set2] 
+  (def subset?
+    (fn [set1 set2]
       (cond (null? set1) true
             :else (and (member? (car set1) set2)
                        (subset? (cdr set1) set2)))))
@@ -49,8 +49,8 @@
   (is (= (subset? '(4 pounds of horseradish) '(four pounds chicken and 5 ounces horseradish)) false)))
 
 (with-test
-  (def eqset? 
-    (fn [set1 set2] 
+  (def eqset?
+    (fn [set1 set2]
       (and (subset? set1 set2)
            (subset? set2 set1))))
 
@@ -65,12 +65,12 @@
   (is (= (eqset? '(:foo :bar :baz) '(:baz :bar :foo)) true)))
 
 (with-test
-  (def intersect? 
-    (fn [set1 set2] 
+  (def intersect?
+    (fn [set1 set2]
       (cond (null? set1) false
             :else (or (member? (car set1) set2)
                       (intersect? (cdr set1) set2)))))
-  
+
   (is (= (intersect? '() '()) false))
   (is (= (intersect? '(1) '(1)) true))
   (is (= (intersect? '(1) '(2)) false))
@@ -80,7 +80,7 @@
   (def intersect
     (fn [set1 set2]
       (cond (null? set1) '()
-            (member? (car set1) set2) (cons (car set1) 
+            (member? (car set1) set2) (cons (car set1)
                                             (intersect (cdr set1) set2))
             :else (intersect (cdr set1) set2))))
 
@@ -109,7 +109,7 @@
     (fn [set1 set2]
       (cond (null? set1) '()
             (member? (car set1) set2) (difference (cdr set1) set2)
-            :else (cons (car set1) 
+            :else (cons (car set1)
                         (difference (cdr set1) set2)))))
 
   (is (= (difference '() '()) '()))
@@ -122,10 +122,10 @@
 
 (with-test
   (def intersect-all
-    (fn [l-set] 
+    (fn [l-set]
       (cond (null? (cdr l-set)) (car l-set)
             :else (intersect (car l-set)
-                              (intersect-all (cdr l-set))))))
+                             (intersect-all (cdr l-set))))))
 
   (is (= (intersect-all '(())) '()))
   (is (= (intersect-all '((a) (a))) '(a)))
@@ -133,9 +133,9 @@
   (is (= (intersect-all '((a 1) (a 2) (a 3))) '(a)))
   (is (= (intersect-all '((a b c) (a b c d) (a b c d e))) '(a b c))))
 
-(with-test 
-  (def a-pair? 
-    (fn [x] 
+(with-test
+  (def a-pair?
+    (fn [x]
       (cond (atom? x) false
             (empty? x) false
             (null? (cdr x)) false

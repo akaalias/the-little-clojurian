@@ -4,11 +4,11 @@
             [the-little-clojurian.chapter2 :refer :all]))
 
 (with-test
-  (def rember 
-    (fn [a lat] 
+  (def rember
+    (fn [a lat]
       (cond (null? lat) '()
             (eq? (car lat) a) (cdr lat)
-            :else (conss (car lat) (rember a 
+            :else (conss (car lat) (rember a
                                            (cdr lat))))))
 
   (is (= (rember 'and '()) '()))
@@ -17,9 +17,8 @@
   (is (= (rember 'mint '(lamb chops and mint jelly)) '(lamb chops and jelly)))
   (is (= (rember 'mint '(lamb chops and mint flavored mint jelly)) '(lamb chops and flavored mint jelly))))
 
-
 (with-test
-  (def firsts 
+  (def firsts
     (fn [l]
       (cond (null? l) '()
             :else (cons (car (car l))
@@ -45,13 +44,13 @@
            (no)))))
 
 (with-test
-  (def insertR 
+  (def insertR
     (fn [new old lat]
       (cond (null? lat) '()
             (eq? (car lat) old) (cons old
                                       (cons new (cdr lat)))
             :else (cons (car lat)
-                        (insertR new old 
+                        (insertR new old
                                  (cdr lat))))))
 
   (is (= (insertR 'topping 'fudge '())
@@ -69,7 +68,7 @@
       (cond (null? lat) '()
             (eq? (car lat) old) (conss new lat)
             :else (cons (car lat) (insertL new old (cdr lat))))))
-  
+
   (is (= (insertL 'topping 'fudge '())
          '()))
   (is (= (insertL 'topping 'fudge '(ice cream with fudge for dessert))
@@ -81,7 +80,7 @@
       (cond (null? lat) '()
             (eq? (car lat) old) (conss new (cdr lat))
             :else (conss (car lat)
-                        (subst new old (cdr lat))))))
+                         (subst new old (cdr lat))))))
 
   (is (= (subst 'topping 'fudge '())
          '()))
@@ -89,7 +88,7 @@
          '(ice cream with topping for dessert))))
 
 (with-test
-  (def subst2 
+  (def subst2
     (fn [new o1 o2 lat]
       (cond (null? lat) '()
             (or (eq? (car lat) o1)
@@ -101,9 +100,8 @@
   (is (= (subst2 'vanilla 'chocolate 'banana '(banana ice cream with chocolate topping))
          '(vanilla ice cream with chocolate topping))))
 
-
 (with-test
-  (def multirember 
+  (def multirember
     (fn [a lat]
       (cond (null? lat) '()
             (eq? (car lat) a) (multirember a (cdr lat))

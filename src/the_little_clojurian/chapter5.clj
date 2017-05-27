@@ -8,7 +8,7 @@
 (declare equal?)
 
 (with-test
-  (def rember* 
+  (def rember*
     (fn [a l]
       (cond (null? l) '()
             (atom? (car l)) (cond (eq? (car l) a) (rember* a (cdr l))
@@ -16,7 +16,7 @@
                                               (rember* a (cdr l))))
             :else (cons (rember* a (car l))
                         (rember* a (cdr l))))))
- 
+
   (is (= (rember* 'cup '()) '()))
   (is (= (rember* 'cup '(coffee)) '(coffee)))
   (is (= (rember* 'cup '(cup)) '()))
@@ -29,16 +29,16 @@
   (def insertR*
     (fn [new old l]
       (cond (null? l) '()
-            (atom? (car l)) (cond (eq? (car l) old) (cons old 
-                                                          (cons new (insertR* new old 
+            (atom? (car l)) (cond (eq? (car l) old) (cons old
+                                                          (cons new (insertR* new old
                                                                               (cdr l))))
 
-                                  :else (cons (car l) 
-                                              (insertR* new old 
+                                  :else (cons (car l)
+                                              (insertR* new old
                                                         (cdr l))))
             :else (cons (insertR* new old (car l))
                         (insertR* new old (cdr l))))))
-  
+
   (is (= (insertR* 'new 'old '()) '()))
   (is (= (insertR* 'new 'old '(old)) '(old new)))
   (is (= (insertR* 'new 'old '((old))) '((old new))))
@@ -46,7 +46,7 @@
 
 (with-test
   (def occur*
-    (fn [a l] 
+    (fn [a l]
       (cond (null? l) 0
             (atom? (car l)) (cond (eq? (car l) a) (add1 (occur* a (cdr l)))
                                   :else (occur* a (cdr l)))
@@ -60,9 +60,9 @@
   (is (= (occur* 'orange '((orange (beer)))) 1))
   (is (= (occur* 'orange '((banana split) and (orange) with sherbet (((and orange peanut) butter)))) 2)))
 
-(with-test 
+(with-test
   (def subst*
-    (fn [new old l] 
+    (fn [new old l]
       (cond (null? l) '()
             (atom? (car l)) (cond (eq? (car l) old) (cons new (subst* new old (cdr l)))
                                   :else (cons (car l) (subst* new old (cdr l))))
@@ -76,7 +76,7 @@
 
 (with-test
   (def insertL*
-    (fn [new old l] 
+    (fn [new old l]
       (cond (null? l) '()
             (atom? (car l)) (cond (eq? (car l) old) (cons new (cons old (insertL* new old (cdr l))))
                                   :else (cons (car l) (insertL* new old (cdr l))))
@@ -89,8 +89,8 @@
   (is (= (insertL* 'new 'old '((these) old ((shoes old) perfume))) '((these) new old ((shoes new old) perfume)))))
 
 (with-test
-  (def member* 
-    (fn [a l] 
+  (def member*
+    (fn [a l]
       (cond (null? l) false
             (atom? (car l)) (or (equan? (car l) a)
                                 (member* a (cdr l)))
@@ -104,12 +104,12 @@
   (is (= (member* 'foo '((the quick) ((((brown (springy foo)) jumps over)) the dog))))))
 
 (with-test
-  (def leftmost 
+  (def leftmost
     (fn [l]
       (cond (null? l) nil
             (atom? (car l)) (car l)
             :else (leftmost (car l)))))
-  
+
   (is (= (leftmost '()) nil))
   (is (= (leftmost '(apple)) 'apple))
   (is (= (leftmost '((apple))) 'apple))
@@ -117,12 +117,12 @@
 
 (with-test
   (def eqlist?
-    (fn [l1 l2] 
+    (fn [l1 l2]
       (cond (and (null? l1) (null? l2)) true
             (or (null? l1) (null? l2)) false
             :else (and (equal? (car l1) (car l2))
                        (eqlist? (cdr l1) (cdr l2))))))
-  
+
   (is (= (eqlist? '() '()) true))
   (is (= (eqlist? '() '(foot)) false))
   (is (= (eqlist? '(foot) '()) false))
@@ -133,12 +133,12 @@
   (is (= (eqlist? '((coffee) (cup)) '((coffee) (cup))) true)))
 
 (with-test
-  (def equal? 
+  (def equal?
     (fn [s1 s2]
       (cond (and (atom? s1) (atom? s2)) (equan? s1 s2)
             (or (atom? s1) (atom? s2)) false
             :else (eqlist? s1 s2))))
-  
+
   (is (= (equal? 'a 'a) true))
   (is (= (equal? 'a 'b) false))
   (is (= (equal? 'a '(a)) false))
@@ -166,11 +166,10 @@
   (is (= (rember 'mint '(lamb chops and mint jelly)) '(lamb chops and jelly)))
   (is (= (rember 'mint '(lamb chops and mint flavored mint jelly)) '(lamb chops and flavored mint jelly))))
 
-
 ;; exercises
-(with-test 
-  (def replace* 
-    (fn [new old l] 
+(with-test
+  (def replace*
+    (fn [new old l]
       (cond (null? l) '()
             (atom? (car l)) (cond (eq? (car l) old) (cons new (replace* new old (cdr l)))
                                   :else (cons (car l) (replace* new old (cdr l))))
@@ -181,5 +180,5 @@
   (is (= (replace* 'foo 'bar '(bar)) '(foo)))
   (is (= (replace* 'foo 'bar '((bar))) '((foo))))
   (is (= (replace* 'foo 'bar '((quux bar))) '((quux foo))))
-  (is (= (replace* 'apple 'orange '(a (deeply (nested (juice of orange) and orange boxes)))) 
+  (is (= (replace* 'apple 'orange '(a (deeply (nested (juice of orange) and orange boxes))))
          '(a (deeply (nested (juice of apple) and apple boxes))))))

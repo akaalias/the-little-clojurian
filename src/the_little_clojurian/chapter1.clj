@@ -3,9 +3,9 @@
 
 (declare listp? atom? s-expression? car cdr conss null? eq?)
 
-(with-test 
-  (def atom? 
-    (fn [a] 
+(with-test
+  (def atom?
+    (fn [a]
       (not (listp? a))))
   (testing "returns true"
     (is (= (atom? 'atom) true))
@@ -23,9 +23,9 @@
     (is (= (atom? (cdr '(Harry had a heap of apples))) false))
     (is (= (atom? (car (cdr '(swing (low sweet) cherry oat)))) false))))
 
-(with-test 
-  (def listp? 
-    (fn [s] 
+(with-test
+  (def listp?
+    (fn [s]
       (list? s)))
   (testing "returns true"
     (is (= true (listp? '(atom))))
@@ -38,8 +38,8 @@
     (is (= false (listp? nil)))))
 
 (with-test
-  (def s-expression? 
-    (fn [x] 
+  (def s-expression?
+    (fn [x]
       (not (nil? x))))
   (testing "returns true"
     (is (= true (s-expression? 'xyz)))
@@ -51,8 +51,8 @@
     (is (= false (s-expression? nil)))))
 
 (with-test
-  (def car 
-    (fn [x] 
+  (def car
+    (fn [x]
       (first x)))
   (testing "returns s-expression"
     (is (= 'a (car '(a b c))))
@@ -64,9 +64,9 @@
   (testing "throws Exception"
     (is (thrown? IllegalArgumentException  (car 'hotdog)))))
 
-(with-test 
-  (def cdr 
-    (fn [l] 
+(with-test
+  (def cdr
+    (fn [l]
       (rest l)))
   (testing "returns list"
     (is (= '(b c) (cdr '(a b c))))
@@ -83,9 +83,9 @@
   (is (= '(((c))) (cdr (cdr '((b) (x y) ((c)))))))
   (is (thrown? IllegalArgumentException (cdr (car '(a (b (c)) d))))))
 
-(with-test 
-  (def conss 
-    (fn [a l] 
+(with-test
+  (def conss
+    (fn [a l]
       (cons a l)))
   (testing "returns the consed list"
     (is (= '(peanut butter and jelly) (conss 'peanut '(butter and jelly))))
@@ -101,9 +101,9 @@
   (is (= '(a b) (conss 'a (car '((b) c d)))))
   (is (= '(a c d) (conss 'a (cdr '((b) c d))))))
 
-(with-test 
-  (def null? 
-    (fn [x] 
+(with-test
+  (def null?
+    (fn [x]
       (empty? x)))
   (testing "returns true"
     (is (= true (null? '())))
@@ -114,14 +114,14 @@
     (is (thrown? IllegalArgumentException (null? 'spaghetti)))))
 
 (with-test
-  (def eq? 
-    (fn [x y] 
+  (def eq?
+    (fn [x y]
       (if (or
            (and (atom? x)
                 (listp? y))
            (and (listp? x)
                 (atom? y)))
-        (throw (IllegalArgumentException.)) 
+        (throw (IllegalArgumentException.))
         (= x y))))
   (testing "returns true"
     (is (= (eq? 'Harry 'Harry) true))

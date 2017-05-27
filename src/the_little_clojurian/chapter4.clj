@@ -6,8 +6,8 @@
 
 (declare one?)
 
-(with-test 
-  (def add1 
+(with-test
+  (def add1
     (fn [x] (+ x 1)))
 
   (is (= (add1 0) 1))
@@ -37,11 +37,11 @@
   (is (= (pluss 46 12) 58)))
 
 (with-test
-  (def minuss 
+  (def minuss
     (fn [n m]
-      (cond 
-       (zero? m) n
-       :else (sub1 (minuss n (sub1 m))))))
+      (cond
+        (zero? m) n
+        :else (sub1 (minuss n (sub1 m))))))
 
   (is (= (minuss 0 0) 0))
   (is (= (minuss 1 1) 0))
@@ -51,7 +51,7 @@
 
 (with-test
   (def tup?
-    (fn [l] 
+    (fn [l]
       (cond (null? l) true
             (not (number? (car l))) false
             :else (tup? (cdr l)))))
@@ -67,8 +67,8 @@
   (is (= (tup? '(3 (7 4) 13 9)) false)))
 
 (with-test
-  (def addtup 
-    (fn [tup] 
+  (def addtup
+    (fn [tup]
       (cond (null? tup) 0
             :else (pluss (car tup) (addtup (cdr tup))))))
 
@@ -80,7 +80,7 @@
   (is (= (addtup '(15 6 7 12 3)) 43)))
 
 (with-test
-  (def multiply 
+  (def multiply
     (fn [n m]
       (cond (zero? m) 0
             :else (pluss n (multiply n (sub1 m))))))
@@ -92,12 +92,12 @@
   (is (= (multiply 13 4) 52)))
 
 (with-test
-  (def tup+ 
+  (def tup+
     (fn [tup1 tup2]
       (cond (null? tup1) tup2
             (null? tup2) tup1
-            :else (cons (pluss (car tup1) (car tup2)) 
-                        (tup+ 
+            :else (cons (pluss (car tup1) (car tup2))
+                        (tup+
                          (cdr tup1) (cdr tup2))))))
 
   (is (= (tup+ '() '()) '()))
@@ -121,18 +121,18 @@
 
 (with-test
   (def smaller-than
-    (fn [n m] 
+    (fn [n m]
       (cond (zero? m) false
             (zero? n) true
             :else (smaller-than (sub1 n) (sub1 m)))))
-  
+
   (is (= (smaller-than 0 0) false))
   (is (= (smaller-than 0 1) true))
   (is (= (smaller-than 4 6))))
 
 (with-test
-  (def equal 
-    (fn [n m] 
+  (def equal
+    (fn [n m]
       (cond (smaller-than n m) false
             (greater-than n m) false
             :else true)))
@@ -143,7 +143,7 @@
   (is (= (equal 44 44) true)))
 
 (with-test
-  (def expt 
+  (def expt
     (fn [n m]
       (cond (zero? m) 1
             :else (multiply n (expt n (sub1 m))))))
@@ -166,8 +166,8 @@
   (is (= (divide 100 10) 10)))
 
 (with-test
-  (def length 
-    (fn [lat] 
+  (def length
+    (fn [lat]
       (cond (null? lat) 0
             :else (add1 (length (cdr lat))))))
 
@@ -176,9 +176,9 @@
   (is (= (length '(hotdogs with mustard sauerkraut and pickles)) 6))
   (is (= (length '(ham and cheese on rye)) 5)))
 
-(with-test 
-  (def pick 
-    (fn [n lat] 
+(with-test
+  (def pick
+    (fn [n lat]
       (cond (zero? n) nil
             (one? n) (car lat)
             :else (pick (sub1 n) (cdr lat)))))
@@ -190,26 +190,25 @@
   (is (= (pick 4 '(apple)) nil)))
 
 (with-test
-  (def rempick 
+  (def rempick
     (fn [n lat]
       (cond (zero? n) nil
             (one? n) (cdr lat)
-            :else (cons (car lat) 
-                        (rempick (sub1 n) 
+            :else (cons (car lat)
+                        (rempick (sub1 n)
                                  (cdr lat))))))
 
   (is (= (rempick 0 '()) nil))
   (is (= (rempick 1 '(apple)) '()))
   (is (= (rempick 2 '(apple bananas gin)) '(apple gin))))
 
-
-(with-test 
-  (def no-nums 
+(with-test
+  (def no-nums
     (fn [lat]
       (cond (null? lat) '()
             (number? (car lat)) (no-nums (cdr lat))
-            :else (cons (car lat) 
-                        (no-nums 
+            :else (cons (car lat)
+                        (no-nums
                          (cdr lat))))))
 
   (is (= (no-nums '()) '()))
@@ -236,7 +235,7 @@
       (cond (and (number? a1) (number? a2)) (equal a1 a2)
             (or (number? a1) (number? a2)) false
             :else (eq? a1 a2))))
-  
+
   (is (= (equan? 0 0) true))
   (is (= (equan? 0 1) false))
   (is (= (equan? 0 'a) false))
@@ -245,7 +244,7 @@
 
 (with-test
   (def occur
-    (fn [a lat] 
+    (fn [a lat]
       (cond (null? lat) 0
             (equan? (car lat) a) (add1 (occur a (cdr lat)))
             :else (occur a (cdr lat)))))
