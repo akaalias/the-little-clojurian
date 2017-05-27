@@ -103,3 +103,18 @@
   (is (= (union '(1) '(1 2)) '(1 2)))
   (is (= (union '(1 2 3) '(4 5 6)) '(1 2 3 4 5 6)))
   (is (= (union '(stewed tomatoes and macaroni casserole) '(macaroni and cheese)) '(stewed tomatoes casserole macaroni and cheese))))
+
+(with-test
+  (def difference
+    (fn [set1 set2]
+      (cond (null? set1) '()
+            (member? (car set1) set2) (difference (cdr set1) set2)
+            :else (cons (car set1) (difference (cdr set1) set2)))))
+
+  (is (= (difference '() '()) '()))
+  (is (= (difference '(:foo) '()) '(:foo)))
+  (is (= (difference '(:bar) '()) '(:bar)))
+  (is (= (difference '(:foo :bar) '(:foo)) '(:bar)))
+  (is (= (difference '(:foo) '(:bar)) '(:foo)))
+  (is (= (difference '(1 2 3) '(1 2 3)) '()))
+  (is (= (difference '(:a :b :c) '(:d :e :f)) '(:a :b :c))))
