@@ -132,3 +132,20 @@
   (is (= (intersect-all '((b) (b))) '(b)))
   (is (= (intersect-all '((a 1) (a 2) (a 3))) '(a)))
   (is (= (intersect-all '((a b c) (a b c d) (a b c d e))) '(a b c))))
+
+(with-test 
+  (def a-pair? 
+    (fn [x] 
+      (cond (atom? x) false
+            (empty? x) false
+            (null? (cdr x)) false
+            (null? (cdr (cdr x))) true
+            :else false)))
+
+  (is (= (a-pair? '()) false))
+  (is (= (a-pair? '(:foo :bar)) true))
+  (is (= (a-pair? '(:foo)) false))
+  (is (= (a-pair? :foo)) false)
+  (is (= (a-pair? '(:foo (:bar))) true))
+  (is (= (a-pair? '(:foo :bar :baz)) false))
+  (is (= (a-pair? '((:foo) (:bar))) true)))
