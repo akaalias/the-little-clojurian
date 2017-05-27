@@ -109,7 +109,8 @@
     (fn [set1 set2]
       (cond (null? set1) '()
             (member? (car set1) set2) (difference (cdr set1) set2)
-            :else (cons (car set1) (difference (cdr set1) set2)))))
+            :else (cons (car set1) 
+                        (difference (cdr set1) set2)))))
 
   (is (= (difference '() '()) '()))
   (is (= (difference '(:foo) '()) '(:foo)))
@@ -118,3 +119,16 @@
   (is (= (difference '(:foo) '(:bar)) '(:foo)))
   (is (= (difference '(1 2 3) '(1 2 3)) '()))
   (is (= (difference '(:a :b :c) '(:d :e :f)) '(:a :b :c))))
+
+(with-test
+  (def intersect-all
+    (fn [l-set] 
+      (cond (null? (cdr l-set)) (car l-set)
+            :else (intersect (car l-set)
+                              (intersect-all (cdr l-set))))))
+
+  (is (= (intersect-all '(())) '()))
+  (is (= (intersect-all '((a) (a))) '(a)))
+  (is (= (intersect-all '((b) (b))) '(b)))
+  (is (= (intersect-all '((a 1) (a 2) (a 3))) '(a)))
+  (is (= (intersect-all '((a b c) (a b c d) (a b c d e))) '(a b c))))
